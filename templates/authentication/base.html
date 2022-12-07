@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- STYLE FOR WORKING time
+        
+      Buttons: Red (#e60000)
+      Navigation bar: Dark Green (#003d00)
+      Footer: Light Green (#c9d8b8)
+      Main content area: Green (#006600)
+      Background: Dark Red (#990000)
+  -->
+  <style>
+    button {
+      background-color: #e60000;
+    }
+    nav {
+      background-color: #003d00;
+
+    }
+    footer {
+      background-color: #c9d8b8;
+    }
+    .main {
+      background-color: #006600;
+      max-width: 99%;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 15px;
+    }
+    body {
+      background-color: #990000;
+    }
+    *{
+      color: white;
+    }
+    a{
+      color: white;
+    }
+    a:hover{
+      color:white;
+      background-color: #c9d8b8;
+      transition: background-color 0.5s ease;
+    }
+    .navbar-nav li a:hover{
+
+      background-color: #c9d8b8;
+      transition: background-color 0.5s ease;
+    }
+
+  </style>
+  
+
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        
+        <a class="navbar-brand" href="{% url 'home' %}">Manzana: where knowledge grows.</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Page 1</a></li>
+        <li><a href="#">Page 2</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  
+  
+<div class="container-fluid text-center main">    
+  {% block content %}
+
+  {%endblock content%}
+</div>
+
+
+
+</body>
+</html>

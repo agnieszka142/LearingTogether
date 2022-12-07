@@ -1,38 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Authentication</title>
-</head>
-<body>
 
+{% extends 'authentication/base.html' %}
 
-
-    {% for message in messages %}
-    <div class = "alert alert-{{ message.tag}} alert-dismissible fade show" role="alert" >
-    <st>Message:</st> {{ message }}
-        <button type="button" class="close" data-dismiss="alert"></button>
-        <span aria-hidden="true">&times;</span>
-
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md-8" >
+        <h1 class="text-center">Welcome to Manzana</h1>
+        <p class="text-center">We are an e-learning platform that offers a wide range of courses and learning resources.</p>
+        
+      </div>
+      <div class="col-md-4">
+        {% if user.is_authenticated %}
+        <h3>Hello {{usermore.username }}, {{ usermore.first_name }} {{ usermore.last_name }}</h3>
+        <h3>You are successfully logged in</h3>
+        <button type="submit"><a href="/signout">SingOut</a></button>
+        {% endif %}
+      </div>
     </div>
+  </div>
+{% endblock content %}
 
-    {% endfor %}
-
-
-    <h3>Welcome to my site</h3>
-
-    {% if user.is_authenticated %}
-    <h3>Hello {{ name1 }}</h3>
-    <h3>You are successfully logged in</h3>
-    <button type="submit"><a href="/signout">SingOut</a></button>
-
-    {% else %}
-    <button type="submit"><a href="/signup">SingUp</a></button>
-    <button type="submit"><a href="/signin">SingIn</a></button>
-    {% endif %}
-
-</body>
-</html>
