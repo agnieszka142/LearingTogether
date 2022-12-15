@@ -1,7 +1,18 @@
 
 {% extends 'authentication/base.html' %}
-
+{% load static %}
 {% block content %}
+<script>
+  function displayForm(){
+      var form = document.getElementById('form');
+      if(form.style.display == 'block'){
+          form.style.display = 'none';
+      } else {
+          form.style.display = 'block';
+      }
+  }
+</script>
+
 <div class="container">
     <div class="row">
       <div class="col-md-8" >
@@ -15,6 +26,10 @@
       <div class="col-md-4">
       
       {% if request.user.is_authenticated %}
+      <div class="user-image">
+        <img src="user_pictures/Zdj_Portretowe.jpg" alt="Profile Picture">
+
+    </div>
         <p>Email: {{ request.user.email }}</p>
         <p>First name: {{ request.user.name }}</p>
         <p>Second name: {{ request.user.surname }}</p>
@@ -22,7 +37,27 @@
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">Sign Out</button>
       </form>
+
+      <button type="button" class="btn btn-primary" onclick="displayForm()">Edit Profile</button>
+      
+      <div id="form" style="display:none;">
+      <form action="{% url 'user_profile_save' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="picture">Profile Picture</label>
+            <input type="file" class="form-control-file" name="picture">
+            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" name="description" maxlength="255" required value="{{request.session.user_data_extra.description}}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
       {% endif %}
+      
     
       </div>
     </div>

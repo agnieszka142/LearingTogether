@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories
+from authentication.models import User, Category, FavCategories, UserProfile
 from django.core import serializers
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
 def home(request):
@@ -64,7 +65,18 @@ def signin(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                user_data = User.objects.get(username=username)
+                try:
+                    user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
+                    request.session['user_data_extra'] = {
+                    'description': user_data_extra.description,
+                    'picture': user_data_extra.picture.url
+                    }
+                except:
+                    user_data_extra = None
+                    request.session['user_data_extra'] = {
+                    'description': "",
+                    'picture': None
+                    }
                 return render(request, "authentication/index.html")
             else:
                 return render(request,"authentication/signin.html", {'bad_login':True})
@@ -110,3 +122,25 @@ def delete_fav_category(request):
 		obj = FavCategories.objects.get(user_id=user_id, id_category=id_category)
 		obj.delete()
 		return redirect('favcategories')
+
+def user_profile_save(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        user = User.objects.get(user_id=user_id)
+        userprofile, created = UserProfile.objects.get_or_create(user_id=user)
+        try:
+            userprofile.picture = request.FILES.get('picture')
+        except MultiValueDictKeyError:
+            if created:
+                userprofile.picture = None
+            else:
+                userprofile.picture = userprofile.picture or None
+        userprofile.description = request.POST.get('description')
+        userprofile.save()
+        request.session['user_data_extra'] = {
+                 'description': userprofile.description,
+                  'picture': userprofile.picture.url if userprofile.picture else None
+                    }
+        return redirect('home')
+    else:
+        return redirect('home')

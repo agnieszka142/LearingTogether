@@ -11,4 +11,6 @@ urlpatterns = [
     path('favcategories', views.favcategories, name="favcategories"),
     path('enroll_fav_category', views.enroll_fav_category, name='enroll_fav_category'),
     path('delete_fav_category', views.delete_fav_category, name='delete_fav_category'),
+    path('user_profile_save', views.user_profile_save, name='user_profile_save'),
+
 ]

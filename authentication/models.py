@@ -36,5 +36,14 @@ class FavCategories(models.Model):
     class Meta:
         managed = True
         db_table = 'FavCategories'
+        
+class UserProfile(models.Model):
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    picture = models.FileField()
+    description = models.CharField(max_length=255)
+    
+    class Meta:
+        managed = True
+        db_table =  'UserProfile'
 
     
