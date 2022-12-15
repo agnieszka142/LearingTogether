@@ -23,8 +23,25 @@
                 <th scope="row">{{category.id_category}}</th>
                 <td>{{category.name}}</td>
                 <td>{{category.description}}</td>
-                <td><a href="#" role="button" class="btn btn-success">Add to Favorites</a></td>
-            </tr>     
+                <td>
+                {% if category.id_category in enrolled_categories %}
+                  <form action="delete_fav_category" method="POST"> 
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                    <input type="hidden" name="id_category" value="{{ category.id_category }}">
+                    <button type="submit" class="btn btn-alert">Remove from Favorites</button>
+                  </form> 
+                    {% else %}
+                  <form action="enroll_fav_category" method="POST"> 
+                    {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                  <input type="hidden" name="id_category" value="{{ category.id_category }}">
+                  <button type="submit" class="btn btn-success">Add to Favorites</button>
+                  </form> 
+                  {% endif %}
+                    
+                </td>         
+                </tr>     
             {% endfor %}
                 </tbody>
             </table>

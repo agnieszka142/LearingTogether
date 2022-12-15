@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category
+from authentication.models import User, Category, FavCategories
 from django.core import serializers
 
 # Create your views here.
@@ -82,4 +82,31 @@ def signout(request):
 
 def favcategories(request):
     # code for getting the favorite categories
-    return render(request, 'authentication/favcategories.html',{'all_categories':Category.objects.all()})
+    enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).values_list('id_category', flat=True)
+    return render(request, 'authentication/favcategories.html',{'all_categories':Category.objects.all(),
+                                                                'enrolled_categories': enrolled_categories
+                                                                })
+    
+def enroll_fav_category(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        category_id = request.POST['id_category']
+        #print(category_id)
+        user = User.objects.get(user_id=user_id)
+        category = Category.objects.get(id_category=category_id)
+        
+        new_fav = FavCategories()
+        new_fav.user_id = user
+        new_fav.id_category = category
+        new_fav.save()
+        return redirect('favcategories')
+    else:
+        return redirect('home')
+    
+def delete_fav_category(request):
+	if request.method == "POST": 
+		user_id = request.POST.get('user_id')
+		id_category = request.POST.get('id_category')
+		obj = FavCategories.objects.get(user_id=user_id, id_category=id_category)
+		obj.delete()
+		return redirect('favcategories')
