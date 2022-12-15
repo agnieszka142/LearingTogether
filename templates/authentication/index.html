@@ -7,14 +7,23 @@
       <div class="col-md-8" >
         <h1 class="text-center">Welcome to Manzana</h1>
         <p class="text-center">We are an e-learning platform that offers a wide range of courses and learning resources.</p>
-        
+        {% if request.user.is_authenticated%}
+            <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
+          {%endif%}
+       
       </div>
       <div class="col-md-4">
-        {% if user.is_authenticated %}
-        <h3>Hello {{usermore.username }}, {{ usermore.first_name }} {{ usermore.last_name }}</h3>
-        <h3>You are successfully logged in</h3>
-        <button type="submit"><a href="/signout">SingOut</a></button>
-        {% endif %}
+      
+      {% if request.user.is_authenticated %}
+        <p>Email: {{ request.user.email }}</p>
+        <p>First name: {{ request.user.name }}</p>
+        <p>Second name: {{ request.user.surname }}</p>
+        <form action="{% url 'signout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Sign Out</button>
+      </form>
+      {% endif %}
+    
       </div>
     </div>
   </div>

@@ -1,0 +1,8 @@
+pip -m install django
+python manage.py runserver
+
+
+
+typical user: 
+login : hanab
+password : 123

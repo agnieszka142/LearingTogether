@@ -6,6 +6,11 @@
         <form action="/signin" method="post" style="max-width: 400px; margin-left:auto; margin-right:auto;">
             {% csrf_token %}
             <div class="form-group">
+            {% if bad_login %}
+                <div>
+                    <p>Credidentials do not match </p>
+                </div>
+            {% endif %}
             <label for="username">Username</label>
             <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
             </div>

@@ -1,0 +1,50 @@
+
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md-8" >
+        <h1 class="text-center">Select your favorite Categories</h1>
+        {% if request.user.is_authenticated%}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for category in all_categories %}
+
+            <tr>
+                <th scope="row">{{category.id_category}}</th>
+                <td>{{category.name}}</td>
+                <td>{{category.description}}</td>
+                <td><a href="#" role="button" class="btn btn-success">Add to Favorites</a></td>
+            </tr>     
+            {% endfor %}
+                </tbody>
+            </table>
+
+        {%endif%}
+      </div>
+      <div class="col-md-4">
+      
+      {% if request.user.is_authenticated %}
+        <p>Email: {{ request.user.email }}</p>
+        <p>First name: {{ request.user.name }}</p>
+        <p>Second name: {{ request.user.surname }}</p>
+        <form action="{% url 'signout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Sign Out</button>
+      </form>
+      {% endif %}
+    
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
