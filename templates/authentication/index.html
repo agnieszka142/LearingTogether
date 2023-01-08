@@ -21,13 +21,13 @@
         {% if request.user.is_authenticated%}
             <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
           {%endif%}
-       
+          <a href="{% url 'course' %}" role="button" class="btn btn-primary">Courses</a>
       </div>
       <div class="col-md-4">
       
       {% if request.user.is_authenticated %}
       <div class="user-image">
-        <img src="user_pictures/Zdj_Portretowe.jpg" alt="Profile Picture">
+        <!--> <img src="user_pictures/Zdj_Portretowe.jpg" alt="Profile Picture"> <!-->
 
     </div>
         <p>Email: {{ request.user.email }}</p>

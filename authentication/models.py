@@ -46,4 +46,16 @@ class UserProfile(models.Model):
         managed = True
         db_table =  'UserProfile'
 
+class Course(models.Model):
+    ID_COURSE = models.AutoField(primary_key=True)
+    ID_CATEGORY = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)    
+    NAME = models.CharField(max_length=255)
+    DESCRIPTION = models.TextField()
+    LOGO = models.CharField(max_length=255)
+    PRICE = models.DecimalField(max_digits=10, decimal_places=2)
+    DURATION = models.PositiveIntegerField()
+    
+    class Meta:
+        managed = True
+        db_table = 'Course'
     
