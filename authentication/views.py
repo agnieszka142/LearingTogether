@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile
+from authentication.models import User, Category, FavCategories, UserProfile, Course
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -66,17 +66,25 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 try:
+                    print("TRYING")
                     user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
                     request.session['user_data_extra'] = {
                     'description': user_data_extra.description,
                     'picture': user_data_extra.picture.url
                     }
                 except:
-                    user_data_extra = None
-                    request.session['user_data_extra'] = {
-                    'description': "",
-                    'picture': None
-                    }
+                    try:
+                        user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
+                        request.session['user_data_extra'] = {
+                            'description': user_data_extra.description,
+                            'picture': None
+                        }
+                    except:
+                        request.session['user_data_extra'] = {
+                        'description': " ",
+                        'picture': None 
+                        }
+
                 return render(request, "authentication/index.html")
             else:
                 return render(request,"authentication/signin.html", {'bad_login':True})
@@ -144,3 +152,22 @@ def user_profile_save(request):
         return redirect('home')
     else:
         return redirect('home')
+    
+    
+def course(request):
+    all_courses = Course.objects.all()
+    courses_with_category_names = []
+    for course in all_courses:
+        category_name = Category.objects.get(pk=course.ID_CATEGORY_id).name
+        courses_with_category_names.append({
+            'ID_COURSE': course.ID_COURSE,
+            'ID_CATEGORY': course.ID_CATEGORY_id,
+            'NAME': course.NAME,
+            'DESCRIPTION': course.DESCRIPTION,
+            'LOGO': course.LOGO,
+            'PRICE': course.PRICE,
+            'DURATION': course.DURATION,
+            'CATEGORY_NAME': category_name
+        })
+    return render(request, 'authentication/course.html', {'course': courses_with_category_names})
+
