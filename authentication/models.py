@@ -58,6 +58,14 @@ class Course(models.Model):
     class Meta:
         managed = True
         db_table = 'Course'
+        
+class CourseEnrolled(models.Model):
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+
+    class Meta:
+        managed = True
+        db_table = 'CourseEnrolled'
 
 class TeachingUnit(models.Model):
     ID_TEACHINGUNIT = models.AutoField(primary_key=True)
@@ -74,4 +82,8 @@ class TUMaterials(models.Model):
     ID_TEACHINGUNIT = models.ForeignKey('TeachingUnit', on_delete=models.SET_NULL, null=True)
     MATERIAL = models.FileField(upload_to='materials/')
     EXPLANATION = models.TextField()
+    
+    class Meta:
+        managed = True
+        db_table = 'TUMaterials'
     

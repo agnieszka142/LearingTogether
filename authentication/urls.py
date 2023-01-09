@@ -14,4 +14,6 @@ urlpatterns = [
     path('user_profile_save', views.user_profile_save, name='user_profile_save'),
     path('course', views.course, name="course"),
     path('addcourse', views.addcourse, name="addcourse"),
+    path('enroll_course', views.enroll_course, name='enroll_course'),
+    path('deroll_course', views.deroll_course, name='deroll_course'),
 ]

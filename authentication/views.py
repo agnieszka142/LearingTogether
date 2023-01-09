@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile, Course
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -169,7 +169,9 @@ def course(request):
             'DURATION': course.DURATION,
             'CATEGORY_NAME': category_name
         })
-    return render(request, 'authentication/course.html', {'course': courses_with_category_names})
+    enrolled_courses = CourseEnrolled.objects.filter(user_id=request.user.user_id).values_list('ID_COURSE', flat=True)
+    return render(request, 'authentication/course.html', {'course': courses_with_category_names,
+                                                          'enrolled_courses': enrolled_courses})
 
 
 def addcourse(request):
@@ -186,4 +188,39 @@ def addcourse(request):
         return redirect('home')
     else:
         return render(request, 'authentication/addcourse.html', {'categories':Category.objects.all()})
+    
+def enroll_course(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        id_course = request.POST['ID_COURSE']
+        #print(category_id)
+        user = User.objects.get(user_id=user_id)
+        course = Course.objects.get(ID_COURSE=id_course)
+        
+        course_enrolled = CourseEnrolled()
+        course_enrolled.user_id = user
+        course_enrolled.ID_COURSE = course
+        course_enrolled.save()
+        return redirect('course')
+    else:
+        return redirect('home')
+    
+
+  
+        #id_course = request.POST['ID_COURSE']
+		#obj = CourseEnrolled.objects.get(user_id=user_id, ID_COURSE=id_course)
+		#obj.delete()
+	    #return redirect('favcategories')
+ 
+def deroll_course(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        id_course = request.POST['ID_COURSE']
+        #print(category_id)
+        user = User.objects.get(user_id=user_id)
+        course = Course.objects.get(ID_COURSE=id_course)
+        obj = CourseEnrolled.objects.get(user_id=user_id, ID_COURSE=id_course)
+        obj.delete()
+        return redirect('course')
+
 
