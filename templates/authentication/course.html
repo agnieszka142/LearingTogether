@@ -18,6 +18,7 @@
                     <th scope="col">Duration</th>
                     <th scope="col">Category</th>
                     <th scope="col">Enroll </th>
+                    <th scope="col">Details </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,7 +48,14 @@
                   </form> 
                   {% endif %}
                 </td>
-
+                <td>
+                  <form action="course_details" method="POST"> 
+                    {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                  <button type="submit" class="btn btn-success">Details</button>
+                  </form> 
+                </td>
                 
        
             </tr>     

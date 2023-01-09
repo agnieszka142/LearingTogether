@@ -205,12 +205,6 @@ def enroll_course(request):
     else:
         return redirect('home')
     
-
-  
-        #id_course = request.POST['ID_COURSE']
-		#obj = CourseEnrolled.objects.get(user_id=user_id, ID_COURSE=id_course)
-		#obj.delete()
-	    #return redirect('favcategories')
  
 def deroll_course(request):
     if request.method == 'POST':
@@ -222,5 +216,19 @@ def deroll_course(request):
         obj = CourseEnrolled.objects.get(user_id=user_id, ID_COURSE=id_course)
         obj.delete()
         return redirect('course')
+    
+def course_details(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        id_course = request.POST['ID_COURSE']
+        spec_course = Course.objects.get(ID_COURSE=id_course)
+        is_enrolled = CourseEnrolled.objects.filter(user_id=user_id, ID_COURSE=id_course).values_list('ID_COURSE', flat=True)
+        
+        category = spec_course.ID_CATEGORY
+        category_name = category.name
+        return render(request, 'authentication/detailedcourse.html', {'course': spec_course,
+                                                          'enrolled_courses': is_enrolled,
+                                                          'category_name': category_name})
+        
 
 

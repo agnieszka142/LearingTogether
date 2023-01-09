@@ -1,0 +1,39 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-8" >
+        <h1 class="text-center">Name of Course: {{course.NAME}}</h1>
+        <h1 class="text-center">Description: {{course.DESCRIPTION}}</h1>
+        <h1 class="text-center">Price: {{course.PRICE}}</h1>
+        <h1 class="text-center">Duration: {{course.DURATION}}</h1>
+        <h1 class="text-center">Category: {{category_name}}</h1>
+        {% if course.ID_COURSE in enrolled_courses %}
+                  <form action="deroll_course" method="POST"> 
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                    <button type="submit" class="btn btn-alert">Deroll</button>
+                  </form> 
+                  {% else %}
+                  <form action="enroll_course" method="POST"> 
+                    {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                  <button type="submit" class="btn btn-success">Enroll</button>
+                  </form> 
+        {% endif %}
+        {% if request.user.is_authenticated%}
+            
+            
+
+        {%endif%}
+      </div>
+      <div class="col-md-4">
+    
+      </div>
+    </div>
+  </div>
+{% endblock content %}
