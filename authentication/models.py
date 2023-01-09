@@ -39,7 +39,7 @@ class FavCategories(models.Model):
         
 class UserProfile(models.Model):
     user_id = models.ForeignKey('User', on_delete=models.CASCADE)
-    picture = models.FileField()
+    picture = models.FileField(upload_to='user_pictures/')
     description = models.CharField(max_length=255)
     
     class Meta:
@@ -58,4 +58,20 @@ class Course(models.Model):
     class Meta:
         managed = True
         db_table = 'Course'
+
+class TeachingUnit(models.Model):
+    ID_TEACHINGUNIT = models.AutoField(primary_key=True)
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
+    NAME = models.CharField(max_length=255)
+    DESCRIPTION = models.TextField()
+
+    class Meta:
+        managed = True
+        db_table = 'TeachingUnit'
+
+class TUMaterials(models.Model):
+    ID_MATERIAL = models.AutoField(primary_key=True)
+    ID_TEACHINGUNIT = models.ForeignKey('TeachingUnit', on_delete=models.SET_NULL, null=True)
+    MATERIAL = models.FileField(upload_to='materials/')
+    EXPLANATION = models.TextField()
     

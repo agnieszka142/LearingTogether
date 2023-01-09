@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete_fav_category', views.delete_fav_category, name='delete_fav_category'),
     path('user_profile_save', views.user_profile_save, name='user_profile_save'),
     path('course', views.course, name="course"),
+    path('addcourse', views.addcourse, name="addcourse"),
 ]

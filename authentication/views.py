@@ -171,3 +171,19 @@ def course(request):
         })
     return render(request, 'authentication/course.html', {'course': courses_with_category_names})
 
+
+def addcourse(request):
+    if request.method == "POST":
+        newcourse = Course()
+        newcourse.NAME = request.POST.get('name')
+        category_id = request.POST['id_category']
+        category = Category.objects.get(id_category=category_id)
+        newcourse.ID_CATEGORY = category 
+        newcourse.DESCRIPTION = request.POST.get('description')
+        newcourse.PRICE = request.POST.get('price')
+        newcourse.DURATION = request.POST.get('duration')
+        newcourse.save()
+        return redirect('home')
+    else:
+        return render(request, 'authentication/addcourse.html', {'categories':Category.objects.all()})
+
