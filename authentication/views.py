@@ -230,5 +230,15 @@ def course_details(request):
                                                           'enrolled_courses': is_enrolled,
                                                           'category_name': category_name})
         
-
+def addcategory(request):
+    if request.method == "POST":
+        newcategory = Category()
+        newcategory.name = request.POST['name']
+        newcategory.description = request.POST['description']
+        #print(newcategory.NAME)
+        #print(newcategory.DESCRIPTION)
+        newcategory.save()
+        return redirect('favcategories')
+    else:
+        return render(request, 'authentication/addcategory.html')
 
