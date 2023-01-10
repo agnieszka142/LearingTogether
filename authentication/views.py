@@ -253,8 +253,10 @@ def addcomment(request):
             ID_COURSE=course
         )
         return redirect('course')
+
 def payment(request):
     return ()
+
 def userprofile(request):
     if request.user.is_authenticated:
         enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).prefetch_related('id_category')
@@ -262,5 +264,14 @@ def userprofile(request):
     else:
         return redirect('home')
 
-
+def mycourses(request):
+    owned = CourseOwner.objects.filter(user_id=request.user).values_list('ID_COURSE', flat=True)
+    courses = []
+    for course in owned:
+        print("-----course")
+        print(course)
+        courses.append(Course.objects.get(ID_COURSE=course))
+    print("------courses")
+    print(courses)
+    return render(request, 'authentication/mycourses.html', {'courses': courses})
 

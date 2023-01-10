@@ -12,8 +12,9 @@
         {% if request.user.is_authenticated%}
             <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
             <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
+            <a href="{% url 'mycourses' %}" role="button" class="btn btn-primary">My Courses</a>
           {%endif%}
-          <a href="{% url 'course' %}" role="button" class="btn btn-primary">Courses</a>
+          <a href="{% url 'course' %}" role="button" class="btn btn-primary">All Courses</a>
       </div>
       <div class="col-md-4">
       
