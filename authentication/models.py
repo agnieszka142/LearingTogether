@@ -69,7 +69,7 @@ class CourseEnrolled(models.Model):
 
 class TeachingUnit(models.Model):
     ID_TEACHINGUNIT = models.AutoField(primary_key=True)
-    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE, null=True)
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
     NAME = models.CharField(max_length=255)
     DESCRIPTION = models.TextField()
 
@@ -79,7 +79,7 @@ class TeachingUnit(models.Model):
 
 class TUMaterials(models.Model):
     ID_MATERIAL = models.AutoField(primary_key=True)
-    ID_TEACHINGUNIT = models.ForeignKey('TeachingUnit', on_delete=models.SET_NULL, null=True)
+    ID_TEACHINGUNIT = models.ForeignKey('TeachingUnit', on_delete=models.CASCADE)
     MATERIAL = models.FileField(upload_to='materials/')
     EXPLANATION = models.TextField()
     
@@ -105,7 +105,7 @@ class UserPayment(models.Model):
     class Meta:
         managed = True
         db_table = 'UserPayment'
-        
+
 class CourseOwner(models.Model):
     ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
     user_id = models.ForeignKey('User', on_delete=models.CASCADE)

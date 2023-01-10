@@ -31,6 +31,7 @@
             <label for="name">Price:</label>
             <input type="text" class="form-control" id="price"  name="price" placeholder="Enter course price" required>
         </div>
+        <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
         <button type="submit" class="btn btn-primary">Submit</button>
     {% else %}
         <h5>Sign in to add new courses!</h5>

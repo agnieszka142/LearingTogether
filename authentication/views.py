@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -191,9 +191,18 @@ def addcourse(request):
         newcourse.PRICE = request.POST.get('price')
         newcourse.DURATION = request.POST.get('duration')
         newcourse.save()
+
+        newowner = CourseOwner()
+        newowner.ID_COURSE = newcourse
+        user_id = request.POST.get('user_id')
+        user = User.objects.get(user_id = user_id)
+        newowner.user_id = user
+        newowner.save()
+
         return redirect('home')
     else:
         return render(request, 'authentication/addcourse.html', {'categories':Category.objects.all()})
+
     
 def enroll_course(request):
     if request.method == 'POST':
