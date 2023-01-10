@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect 
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -191,16 +191,9 @@ def addcourse(request):
     
 def enroll_course(request):
     if request.method == 'POST':
-        user_id = request.POST['user_id']
-        id_course = request.POST['ID_COURSE']
-        #print(category_id)
-        user = User.objects.get(user_id=user_id)
+        id_course = request.POST.get('ID_COURSE')
         course = Course.objects.get(ID_COURSE=id_course)
-        
-        course_enrolled = CourseEnrolled()
-        course_enrolled.user_id = user
-        course_enrolled.ID_COURSE = course
-        course_enrolled.save()
+        CourseEnrolled.objects.create(user_id=request.user, ID_COURSE=course)
         return redirect('course')
     else:
         return redirect('home')
@@ -208,37 +201,42 @@ def enroll_course(request):
  
 def deroll_course(request):
     if request.method == 'POST':
-        user_id = request.POST['user_id']
-        id_course = request.POST['ID_COURSE']
-        #print(category_id)
-        user = User.objects.get(user_id=user_id)
-        course = Course.objects.get(ID_COURSE=id_course)
-        obj = CourseEnrolled.objects.get(user_id=user_id, ID_COURSE=id_course)
+        id_course = request.POST.get('ID_COURSE')
+        obj = CourseEnrolled.objects.get(user_id=request.user, ID_COURSE=id_course)
         obj.delete()
         return redirect('course')
     
 def course_details(request):
     if request.method == 'POST':
-        user_id = request.POST['user_id']
-        id_course = request.POST['ID_COURSE']
+        id_course = request.POST.get('ID_COURSE')
         spec_course = Course.objects.get(ID_COURSE=id_course)
-        is_enrolled = CourseEnrolled.objects.filter(user_id=user_id, ID_COURSE=id_course).values_list('ID_COURSE', flat=True)
-        
-        category = spec_course.ID_CATEGORY
-        category_name = category.name
-        return render(request, 'authentication/detailedcourse.html', {'course': spec_course,
-                                                          'enrolled_courses': is_enrolled,
-                                                          'category_name': category_name})
+        category_name = spec_course.ID_CATEGORY.name
+        is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
+        course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
+        course_grades = course_grades.select_related('user_id')
+        return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
         
 def addcategory(request):
     if request.method == "POST":
-        newcategory = Category()
-        newcategory.name = request.POST['name']
-        newcategory.description = request.POST['description']
-        #print(newcategory.NAME)
-        #print(newcategory.DESCRIPTION)
-        newcategory.save()
+        Category.objects.create(
+            name=request.POST.get('name'),
+            description=request.POST.get('description'),
+        )
         return redirect('favcategories')
     else:
         return render(request, 'authentication/addcategory.html')
+    
+def addcomment(request):
+    if request.method == "POST":
+        user = User.objects.get(user_id=request.POST.get('user_id'))
+        rate, comment = request.POST.get('rate'), request.POST.get('comment')
+        course = Course.objects.get(ID_COURSE=request.POST.get('ID_COURSE'))
+        CourseGrade.objects.create(
+            RATE=rate,
+            COMMENT=comment,
+            user_id=user,
+            ID_COURSE=course
+        )
+        return redirect('course')
+
 

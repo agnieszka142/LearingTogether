@@ -86,4 +86,13 @@ class TUMaterials(models.Model):
     class Meta:
         managed = True
         db_table = 'TUMaterials'
-    
+        
+class CourseGrade(models.Model):
+    ID_GRADE = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
+    RATE = models.PositiveIntegerField()
+    COMMENT = models.TextField()
+    class Meta:
+        managed = True
+        db_table = 'CourseGrade'

@@ -6,68 +6,67 @@
     <div class="row">
       <div class="col-md-8" >
         <h1 class="text-center">Courses</h1>
-        <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
-        {% if request.user.is_authenticated%}
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Duration</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Enroll </th>
-                    <th scope="col">Details </th>
-                </tr>
-                </thead>
-                <tbody>
-            {% for course in course %}
 
+        <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
+        
+        {% if request.user.is_authenticated %}
+        <table class="table">
+            <thead>
             <tr>
-                <th scope="row">{{course.ID_COURSE}}</th>
-                <td>{{course.NAME}}</td>
-                <td>{{course.DESCRIPTION}}</td>
-                <td>{{course.PRICE}}</td>
-                <td>{{course.DURATION}}</td>
-                <td>{{course.CATEGORY_NAME}}</td>
-                <td>
-                  {% if course.ID_COURSE in enrolled_courses %}
-                  <form action="deroll_course" method="POST"> 
-                    {% csrf_token %}
-                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                    <button type="submit" class="btn btn-alert">Remove from Favorites</button>
-                  </form> 
-                  {% else %}
-                  <form action="enroll_course" method="POST"> 
-                    {% csrf_token %}
-                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                  <button type="submit" class="btn btn-success">Add to Favorites</button>
-                  </form> 
-                  {% endif %}
-                </td>
-                <td>
-                  <form action="course_details" method="POST"> 
-                    {% csrf_token %}
-                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                  <button type="submit" class="btn btn-success">Details</button>
-                  </form> 
-                </td>
-                
-       
-            </tr>     
-            {% endfor %}
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Category</th>
+                <th scope="col">Enroll </th>
+                <th scope="col">Details </th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for course in course %}
+                <tr>
+                    <th scope="row">{{course.ID_COURSE}}</th>
+                    <td>{{course.NAME}}</td>
+                    <td>{{course.DESCRIPTION}}</td>
+                    <td>{{course.PRICE}}</td>
+                    <td>{{course.DURATION}}</td>
+                    <td>{{course.CATEGORY_NAME}}</td>
+                    <td>
+                        {% if course.ID_COURSE in enrolled_courses %}
+                        <form action="deroll_course" method="POST"> 
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                            <button type="submit" class="btn btn-alert">Remove from Favorites</button>
+                        </form> 
+                        {% else %}
+                        <form action="enroll_course" method="POST"> 
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                            <button type="submit" class="btn btn-success">Add to Favorites</button>
+                        </form> 
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="course_details" method="POST"> 
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                            <button type="submit" class="btn btn-success">Details</button>
+                          </form> 
+                        </td>
+                    </tr>     
+                    {% endfor %}
                 </tbody>
             </table>
-
-        {%endif%}
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+        
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
+    {% endblock content %}
     
-      </div>
-    </div>
-  </div>
-{% endblock content %}
