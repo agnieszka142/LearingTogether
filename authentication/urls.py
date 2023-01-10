@@ -19,4 +19,6 @@ urlpatterns = [
     path('course_details', views.course_details, name='course_details'),
     path('addcategory', views.addcategory, name='addcategory'),
     path('addcomment', views.addcomment, name='addcomment'),
+    path('payment', views.payment, name='payment'),
+    path('userprofile', views.userprofile, name='userprofile'),
 ]

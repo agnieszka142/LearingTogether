@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -66,7 +66,7 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 try:
-                    print("TRYING")
+                    #print("TRYING")
                     user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
                     request.session['user_data_extra'] = {
                     'description': user_data_extra.description,
@@ -124,12 +124,18 @@ def enroll_fav_category(request):
         return redirect('home')
     
 def delete_fav_category(request):
-	if request.method == "POST": 
-		user_id = request.POST.get('user_id')
-		id_category = request.POST.get('id_category')
-		obj = FavCategories.objects.get(user_id=user_id, id_category=id_category)
-		obj.delete()
-		return redirect('favcategories')
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        id_category = request.POST.get('id_category')
+        obj = FavCategories.objects.get(user_id=user_id, id_category=id_category)
+        obj.delete()
+        from_profile = request.POST.get('from_profile')
+        if from_profile:
+            return redirect('userprofile')
+        else:
+            return redirect('favcategories')
+
+
 
 def user_profile_save(request):
     if request.method == 'POST':
@@ -149,9 +155,9 @@ def user_profile_save(request):
                  'description': userprofile.description,
                   'picture': userprofile.picture.url if userprofile.picture else None
                     }
-        return redirect('home')
+        return redirect('userprofile')
     else:
-        return redirect('home')
+        return redirect('userprofile')
     
     
 def course(request):
@@ -238,5 +244,14 @@ def addcomment(request):
             ID_COURSE=course
         )
         return redirect('course')
+def payment(request):
+    return ()
+def userprofile(request):
+    if request.user.is_authenticated:
+        enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).prefetch_related('id_category')
+        return render(request, 'authentication/userprofile.html', {'enrolled_categories': enrolled_categories})
+    else:
+        return redirect('home')
+
 
 

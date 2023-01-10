@@ -96,3 +96,12 @@ class CourseGrade(models.Model):
     class Meta:
         managed = True
         db_table = 'CourseGrade'
+        
+class UserPayment(models.Model):
+    ID_PAYMENT = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    NAME_OF_PAYMENT = models.TextField()
+    DATA = models.TextField()
+    class Meta:
+        managed = True
+        db_table = 'UserPayment'

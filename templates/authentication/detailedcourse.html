@@ -1,97 +1,103 @@
 {% extends 'authentication/base.html' %}
 
 {% block content %}
-<script>
-  function displayForm(){
-      var form = document.getElementById('form');
-      if(form.style.display == 'block'){
-          form.style.display = 'none';
-      } else {
-          form.style.display = 'block';
-      }
-  }
-</script>
-<div class="container">
-    <div class="row">
-      <div class="col-md-8" >
-        <h1 class="text-center">Name of Course: {{course.NAME}}</h1>
-        <h1 class="text-center">Description: {{course.DESCRIPTION}}</h1>
-        <h1 class="text-center">Price: {{course.PRICE}}</h1>
-        <h1 class="text-center">Duration: {{course.DURATION}}</h1>
-        <h1 class="text-center">Category: {{category_name}}</h1>
-        {% if course.ID_COURSE in enrolled_courses %}
-                  <form action="deroll_course" method="POST"> 
-                    {% csrf_token %}
-                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                    <button type="submit" class="btn btn-alert">Deroll</button>
-                  </form> 
-                  {% else %}
-                  <form action="enroll_course" method="POST"> 
-                    {% csrf_token %}
-                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                  <button type="submit" class="btn btn-success">Enroll</button>
-                  </form> 
-        {% endif %}
 
-        {% if request.user.is_authenticated%}
-        <button type="button" class="btn btn-primary" onclick="displayForm()">Rate Course!</button>
-
-        <div id="form" style="display:none;">
-        <form action="addcomment" method="POST" class="form-horizontal">
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h1 class="text-center">Name of Course: {{course.NAME}}</h1>
+      <h3 class="text-center">Description: {{course.DESCRIPTION}}</h3>
+      <p class="text-center">Price: {{course.PRICE}}</p>
+      <p class="text-center">Duration: {{course.DURATION}}</p>
+      <p class="text-center">Category: {{category_name}}</p>
+      {% if request.user.is_authenticated %}
+        {% if course.PRICE > 0 %}
+        <form action="buy_course" method="POST"> 
           {% csrf_token %}
-          <div class="form-group">
+          <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+          <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+          <button type="submit" class="btn btn-success">Buy {{course.PRICE}}</button>
+        </form> 
+      {% else %}
+        {% if course.ID_COURSE in enrolled_courses %}
+          <form action="deroll_course" method="POST"> 
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+            <button type="submit" class="btn btn-danger">Deroll</button>
+          </form> 
+        {% else %}
+          <form action="enroll_course" method="POST"> 
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+            <button type="submit" class="btn btn-success">Enroll</button>
+          </form> 
+        {% endif %}
+      {% endif %}
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comments in comments %}
+            <tr>
+              <th scope="row">{{ comments.user_id.username }}</th>
+              <td>{{ comments.RATE }}</td>
+              <td>{{ comments.COMMENT }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if request.user.is_authenticated %}
+      {% if comments %}
+      <button type="button" class="btn btn-primary" onclick="displayForm()">Rate Course!</button>
+      {% else %}
+      <button type="button" class="btn btn-primary" onclick="displayForm()">Be First to Rate Course!</button>
+      {% endif %}
+        <div id="form" style="display:none;">
+          <form action="addcomment" method="POST" class="form-horizontal">
+            {% csrf_token %}
+            <div class="form-group">
               <label for="id_rate" class="col-sm-2 control-label">Rate</label>
               <div class="col-sm-10">
-                  <input type="number" min="1" max="10" class="form-control" name="rate" id="id_rate" placeholder="Enter a rate from 1-10">
-                  <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                  <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                <input type="number" min="1" max="10" class="form-control" name="rate" id="id_rate" placeholder="Enter a rate from 1-10">
+                <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
               </div>
-          </div>
-          <div class="form-group">
+            </div>
+            <div class="form-group">
               <label for="id_comment" class="col-sm-2 control-label">Comment</label>
               <div class="col-sm-10">
-                  <textarea name="comment" class="form-control" rows="3" id="id_comment" placeholder="Enter your comment here"></textarea>
+                <textarea name="comment" class="form-control" rows="3" id="id_comment" placeholder="Enter your comment here"></textarea>
               </div>
-          </div>
-          <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
-                </div>
-              </form>
             </div>
-      
-
-        {%endif%}
-      </div>
-      <div class="col-md-4">
-
-        <table class="table">
-          <thead>
-          <tr>
-              <th scope="col">Name </th>
-              <th scope="col">Rate</th>
-              <th scope="col">Comment</th>
-          </tr>
-          </thead>
-          <tbody>
-      {% for comments in comments %}
-
-      <tr>
-          <th scope="row">{{comments.user_id.username}}</th>
-          <td>{{comments.RATE}}</td>
-          <td>{{comments.COMMENT}}</td>
-
-      </tr>     
-      {% endfor %}
-          </tbody>
-      </table>
-
-
-
-      </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        {% endif %} 
     </div>
   </div>
-{% endblock content %}
+</div>
+<script>
+  function displayForm() {
+    var form = document.getElementById('form');
+    if (form.style.display === 'block') {
+      form.style.display = 'none';
+    } else {
+      form.style.display = 'block';
+    }
+  }
+</script>
+{% endblock %}

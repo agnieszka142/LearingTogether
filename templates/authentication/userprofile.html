@@ -1,0 +1,70 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+{% if request.user.is_authenticated%}
+    <div class="container">
+        <div class="row">
+        <div class="col-md-8" >
+            <div class="form-group">
+                <label for="name-input" class="control-label">Name</label>
+                <input type="text" class="form-control" id="name-input" value="{{ request.user.name }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="surname-input" class="control-label">Surname</label>
+                <input type="text" class="form-control" id="surname-input" value="{{ request.user.surname }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="username-input" class="control-label">Username</label>
+                <input type="text" class="form-control" id="username-input" value="{{ request.user.username }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="gender-input" class="control-label">Gender</label>
+                <input type="text" class="form-control" id="gender-input" value="{{ request.user.gender }}" readonly>
+            </div>
+            
+            <form action="{% url 'user_profile_save' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="picture">Profile Picture</label>
+                    <input type="file" class="form-control-file" name="picture">
+                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" name="description" maxlength="255" required value="{{request.session.user_data_extra.description}}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Deroll</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for category in enrolled_categories %}
+                        <tr>
+                            <td>{{ category.id_category.name }}</td>
+                            <td>
+                                <form action="delete_fav_category" method="POST"> 
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                                    <input type="hidden" name="id_category" value="{{ category.id_category.id_category }}">
+                                    <input type="hidden" name="from_profile" value="true">
+                                    <button type="submit" class="btn btn-alert">Remove from Favorites</button>
+                                </form> 
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+                <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
+        </div>
+    </div>
+    </div>
+{%  endif   %}
+{% endblock %}
