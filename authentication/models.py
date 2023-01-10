@@ -105,3 +105,10 @@ class UserPayment(models.Model):
     class Meta:
         managed = True
         db_table = 'UserPayment'
+        
+class CourseOwner(models.Model):
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    class Meta:
+        managed = True
+        db_table = 'CourseOwner'
