@@ -69,7 +69,7 @@ class CourseEnrolled(models.Model):
 
 class TeachingUnit(models.Model):
     ID_TEACHINGUNIT = models.AutoField(primary_key=True)
-    ID_COURSE = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE, null=True)
     NAME = models.CharField(max_length=255)
     DESCRIPTION = models.TextField()
 
