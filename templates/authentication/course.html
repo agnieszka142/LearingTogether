@@ -6,9 +6,9 @@
     <div class="row">
       <div class="col-md-8" >
         <h1 class="text-center">Courses</h1>
-
+        {% if request.user.is_authenticated %}
         <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
-        
+        {% endif %}
         {% if request.user.is_authenticated %}
         <table class="table">
             <thead>
@@ -61,6 +61,40 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for course in course %}
+                    <tr>
+                        <th scope="row">{{course.ID_COURSE}}</th>
+                        <td>{{course.NAME}}</td>
+                        <td>{{course.DESCRIPTION}}</td>
+                        <td>{{course.PRICE}}</td>
+                        <td>{{course.DURATION}}</td>
+                        <td>{{course.CATEGORY_NAME}}</td>
+                        <td>
+                            <form action="course_details" method="POST"> 
+                                {% csrf_token %}
+                                <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                                <button type="submit" class="btn btn-success">Details</button>
+                              </form> 
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
             {% endif %}
           </div>
           <div class="col-md-4">

@@ -188,9 +188,14 @@ def get_courses_with_category_names():
 #Display courses that someone is enrolled into
 def course(request):
     courses_with_category_names = get_courses_with_category_names()
-    enrolled_courses = CourseEnrolled.objects.filter(user_id=request.user.user_id).values_list('ID_COURSE', flat=True)
-    return render(request, 'authentication/course.html', {'course': courses_with_category_names,
-                                                          'enrolled_courses': enrolled_courses})
+    if request.user.is_authenticated:
+        enrolled_courses = CourseEnrolled.objects.filter(user_id=request.user.user_id).values_list('ID_COURSE', flat=True)
+        return render(request, 'authentication/course.html', {'course': courses_with_category_names,
+                                                            'enrolled_courses': enrolled_courses})
+    else:
+        enrolled_courses = []
+        return render(request, 'authentication/course.html', {'course': courses_with_category_names,
+                                                     'enrolled_courses': enrolled_courses})
 
 
 def addcourse(request):
@@ -242,10 +247,15 @@ def course_details(request):
             category_name = spec_course.ID_CATEGORY.name
         except:
             category_name = "Category Deleted"
-        is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
         course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
-        course_grades = course_grades.select_related('user_id')
-        return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
+        if request.user.is_authenticated:
+            is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
+            course_grades = course_grades.select_related('user_id')
+            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
+        else:
+            is_enrolled = False
+            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
+            
         
 def addcategory(request):
     if request.method == "POST":
