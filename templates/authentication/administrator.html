@@ -1,0 +1,167 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8" >
+            <button type="button" class="btn btn-primary" onclick="displayForm()">Show Courses</button>
+            <div id="showcourses" style="display:block;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Details </th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in course %}
+                        <tr>
+                            <th scope="row">{{course.ID_COURSE}}</th>
+                            <td>{{course.NAME}}</td>
+                            <td>{{course.DESCRIPTION}}</td>
+                            <td>{{course.PRICE}}</td>
+                            <td>{{course.DURATION}}</td>
+                            <td>{{course.CATEGORY_NAME}}</td>
+                            <td>
+                                <form action="course_details" method="POST"> 
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                                    
+                                    <button type="submit" class="btn btn-success">Details</button>
+                                </form> 
+                            </td>
+                            <td>
+                                <form action="course_admin_delete" method="POST"> 
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                                    <button type="submit" class="btn btn-alert">Delete Course</button>
+                                </form> 
+                            </td>
+                            </tr>     
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="displayCategories()">Show Categories</button>
+                <div id="showcategories" style="display:block;">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                    {% for category in all_categories %}
+                    <tr>
+                        <th scope="row">{{category.id_category}}</th>
+                        <td>{{category.name}}</td>
+                        <td>{{category.description}}</td>
+                        <td>
+                            <td>
+                                <form action="category_admin_delete" method="POST"> 
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id_category" value="{{ category.id_category }}">
+                                    <button type="submit" class="btn btn-alert">Delete Category</button>
+                                </form> 
+                            </td>
+                        </td>
+                        </tr>     
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="displayUsers()">Show Users</button>
+                <div id="showusers" style="display:block;">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Surname</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Delete</th>
+                            <th scope="col">Admin</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                    {% for user in all_users %}
+                    <tr>
+                        <th scope="row">{{user.user_id}}</th>
+                        <td>{{user.username}}</td>
+                        <td>{{user.name}}</td>  
+                        <td>{{user.surname}}</td>   
+                        <td>{{user.gender}}</td> 
+                        <td>{{user.email}}</td>
+                        <td>
+                            <form action="user_admin_delete" method="POST"> 
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                <button type="submit" class="btn btn-alert">Delete User</button>
+                            </form> 
+                        </td>
+                        <td>
+                        {% if user.user_id not in admins %}
+                            <form action="grant_admin" method="POST"> 
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                <button type="submit" class="btn btn-success">Grant Admin</button>
+                            </form> 
+                        {% else %}
+                            <form action="take_admin" method="POST"> 
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                <button type="submit" class="btn btn-alert">Remove Admin</button>
+                            </form> 
+                        {% endif %}
+                        
+                        </td>
+                    </tr>     
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>    
+
+
+<script>
+    function displayForm() {
+      var form = document.getElementById('showcourses');
+      if (form.style.display === 'block') {
+        form.style.display = 'none';
+      } else {
+        form.style.display = 'block';
+      }
+    }
+    function displayCategories() {
+        var form = document.getElementById('showcategories');
+        if (form.style.display === 'block') {
+          form.style.display = 'none';
+        } else {
+          form.style.display = 'block';
+        }
+      }
+      function displayUsers() {
+        var form = document.getElementById('showusers');
+        if (form.style.display === 'block') {
+          form.style.display = 'none';
+        } else {
+          form.style.display = 'block';
+        }
+      }
+  </script>
+{% endblock %}

@@ -24,4 +24,10 @@ urlpatterns = [
     path('mycourses', views.mycourses, name='mycourses'),
     path('mycourse_detail', views.mycourse_detail, name='mycourse_detail'),
     path('addunit', views.addunit, name='addunit'),
+    path('administrator', views.administrator, name='administrator'),
+    path('course_admin_delete', views.course_admin_delete, name='course_admin_delete'),
+    path('category_admin_delete', views.category_admin_delete, name='category_admin_delete'),
+    path('user_admin_delete', views.user_admin_delete, name='user_admin_delete'),
+    path('grant_admin', views.grant_admin, name='grant_admin'),
+    path('take_admin', views.take_admin, name='take_admin'),
 ]

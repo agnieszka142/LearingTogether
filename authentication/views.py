@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
 from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, TeachingUnit
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, Administrator
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -84,7 +85,11 @@ def signin(request):
                         'description': " ",
                         'picture': None 
                         }
-
+                administrator = Administrator.objects.filter(user_id=request.user.user_id).exists()
+                if administrator:
+                    request.session['user_data_extra'] = { 'administrator': True }
+                else:
+                    request.session['user_data_extra'] = { 'administrator': False }
                 return render(request, "authentication/index.html")
             else:
                 return render(request,"authentication/signin.html", {'bad_login':True})
@@ -159,12 +164,16 @@ def user_profile_save(request):
     else:
         return redirect('userprofile')
     
-    
-def course(request):
+#Function to get courses with category name if category was deleted course category =  Empty Category
+def get_courses_with_category_names():
     all_courses = Course.objects.all()
     courses_with_category_names = []
     for course in all_courses:
-        category_name = Category.objects.get(pk=course.ID_CATEGORY_id).name
+        category_name = ''
+        if course.ID_CATEGORY_id:
+            category_name = Category.objects.get(pk=course.ID_CATEGORY_id).name
+        else:
+            category_name = "Empty Category"
         courses_with_category_names.append({
             'ID_COURSE': course.ID_COURSE,
             'ID_CATEGORY': course.ID_CATEGORY_id,
@@ -175,6 +184,10 @@ def course(request):
             'DURATION': course.DURATION,
             'CATEGORY_NAME': category_name
         })
+    return courses_with_category_names
+#Display courses that someone is enrolled into
+def course(request):
+    courses_with_category_names = get_courses_with_category_names()
     enrolled_courses = CourseEnrolled.objects.filter(user_id=request.user.user_id).values_list('ID_COURSE', flat=True)
     return render(request, 'authentication/course.html', {'course': courses_with_category_names,
                                                           'enrolled_courses': enrolled_courses})
@@ -225,7 +238,10 @@ def course_details(request):
     if request.method == 'POST':
         id_course = request.POST.get('ID_COURSE')
         spec_course = Course.objects.get(ID_COURSE=id_course)
-        category_name = spec_course.ID_CATEGORY.name
+        try:
+            category_name = spec_course.ID_CATEGORY.name
+        except:
+            category_name = "Category Deleted"
         is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
         course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
         course_grades = course_grades.select_related('user_id')
@@ -305,4 +321,49 @@ def addunit(request):
             newunit.save()
             return redirect('mycourse_detail')
     return render(request, 'authentication/addunit.html', {'id_course': id_course})
+
+def administrator(request):
+    if request.session['user_data_extra'] != { 'administrator': True }:
+        return redirect('home')
+    else:
+        courses_with_category_names = get_courses_with_category_names()
+        administrators =  Administrator.objects.all().values_list('user_id',flat=True)
+        return render( request, 'authentication/administrator.html', {'course': courses_with_category_names,'all_categories':Category.objects.all(), 'all_users': User.objects.all(), 'admins' : administrators})
+
+def course_admin_delete(request):
+    if request.method == "POST":
+        id_course = request.POST.get('ID_COURSE')
+        obj = Course.objects.get(ID_COURSE=id_course)
+        obj.delete()
+        return redirect('administrator')
+    
+def category_admin_delete(request):
+    if request.method == "POST":
+        id_category = request.POST.get('id_category')
+        obj = Category.objects.get(id_category=id_category)
+        obj.delete()
+        return redirect('administrator')
+    
+def user_admin_delete(request):
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        obj = User.objects.get(user_id=user_id)
+        obj.delete()
+        return redirect('administrator')
+
+def grant_admin(request):
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        obj = Administrator()
+        obj.user_id_id = user_id
+        obj.save()
+        return redirect('administrator')
+
+def take_admin(request):
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        obj = Administrator.objects.get(user_id=user_id)
+        obj.delete()
+        return redirect('administrator')
+
 
