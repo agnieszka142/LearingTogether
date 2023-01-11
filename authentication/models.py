@@ -112,3 +112,9 @@ class CourseOwner(models.Model):
     class Meta:
         managed = True
         db_table = 'CourseOwner'
+        
+class Administrator(models.Model):
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    class Meta:
+        managed = True
+        db_table = 'Administrator'
