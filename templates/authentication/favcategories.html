@@ -37,7 +37,7 @@
                     {% csrf_token %}
                   <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                   <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                  <button type="submit" class="btn btn-success">Enroll</button>
+                  <button type="submit" class="btn btn-success">Add to Favorites</button>
                   </form> 
                   {% endif %}
                     

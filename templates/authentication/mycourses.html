@@ -27,6 +27,14 @@
                     <td>{{course.DESCRIPTION}}</td>
                     <td>{{course.PRICE}}</td>
                     <td>{{course.DURATION}}</td>
+                    <td>
+                      <form action="mycourse_detail" method="POST"> 
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                        <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                        <button type="submit" class="btn btn-success">Details</button>
+                      </form> 
+                    </td>
                 </tr>     
                 {% endfor %}
             </tbody>

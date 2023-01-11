@@ -38,7 +38,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                             <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                            <button type="submit" class="btn btn-alert">Deroll</button>
+                            <button type="submit" class="btn btn-alert">Leave</button>
                         </form> 
                         {% else %}
                         <form action="enroll_course" method="POST"> 

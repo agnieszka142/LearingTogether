@@ -22,4 +22,6 @@ urlpatterns = [
     path('payment', views.payment, name='payment'),
     path('userprofile', views.userprofile, name='userprofile'),
     path('mycourses', views.mycourses, name='mycourses'),
+    path('mycourse_detail', views.mycourse_detail, name='mycourse_detail'),
+    path('addunit', views.addunit, name='addunit'),
 ]

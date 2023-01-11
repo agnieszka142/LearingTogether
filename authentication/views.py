@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
-from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, TeachingUnit
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -268,10 +268,41 @@ def mycourses(request):
     owned = CourseOwner.objects.filter(user_id=request.user).values_list('ID_COURSE', flat=True)
     courses = []
     for course in owned:
-        print("-----course")
-        print(course)
         courses.append(Course.objects.get(ID_COURSE=course))
-    print("------courses")
-    print(courses)
-    return render(request, 'authentication/mycourses.html', {'courses': courses})
+    return render(request, 'authentication/mycourses.html', {'courses': courses}) 
+
+def mycourse_detail(request):
+    if request.method == 'POST':
+        id_course = request.POST.get('ID_COURSE')
+    else:
+        id_course = request.session.get('id_course')
+    spec_course = Course.objects.get(ID_COURSE=id_course)
+    try:
+        category_name = spec_course.ID_CATEGORY.name
+    except:
+        category_name = "Category Deleted"
+    course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
+    course_grades = course_grades.select_related('user_id')
+    teaching_units = TeachingUnit.objects.filter(ID_COURSE=id_course)
+    return render(request, 'authentication/mycourse_detail.html', {'course': spec_course,
+                                                                    'category_name': category_name,
+                                                                    'comments': course_grades,
+                                                                    'teaching_units': teaching_units})
+
+
+def addunit(request):
+    if request.method == 'POST':
+        id_course = request.POST.get('ID_COURSE')
+        newunit = TeachingUnit()
+        course = Course.objects.get(ID_COURSE=id_course)
+        newunit.ID_COURSE = course
+        name = request.POST.get('name')
+        desc = request.POST.get('description')
+        request.session['id_course'] = id_course
+        if name and desc:
+            newunit.NAME = name
+            newunit.DESCRIPTION = desc
+            newunit.save()
+            return redirect('mycourse_detail')
+    return render(request, 'authentication/addunit.html', {'id_course': id_course})
 
