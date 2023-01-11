@@ -2,6 +2,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -30,4 +32,4 @@ urlpatterns = [
     path('user_admin_delete', views.user_admin_delete, name='user_admin_delete'),
     path('grant_admin', views.grant_admin, name='grant_admin'),
     path('take_admin', views.take_admin, name='take_admin'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

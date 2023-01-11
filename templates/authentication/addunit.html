@@ -17,7 +17,7 @@
         </div>
         <form action="addunit" method="POST"> 
             {% csrf_token %}
-            <input type="hidden" name="ID_COURSE" value="{{ id_course }}">
+            <!--<input type="hidden" name="ID_COURSE" value="{{ id_course }}">-->
             <button type="submit" class="btn btn-success">Add Unit</button>
           </form>
     {% else %}

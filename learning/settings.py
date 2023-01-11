@@ -140,4 +140,5 @@ AUTH_USER_MODEL = 'authentication.User'
 APPEND_SLASH = False
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/user_pictures/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

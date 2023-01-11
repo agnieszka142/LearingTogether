@@ -1,6 +1,7 @@
 {% extends 'authentication/base.html' %}
 
 {% block content %}
+
 {% if request.user.is_authenticated%}
     <div class="container">
         <div class="row">
@@ -26,6 +27,7 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="picture">Profile Picture</label>
+                    <img src="{{profile.picture.url}}" alt="Failed to display profile picture" height="200px">
                     <input type="file" class="form-control-file" name="picture">
                     <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                 </div>

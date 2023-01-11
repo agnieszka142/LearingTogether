@@ -276,7 +276,8 @@ def payment(request):
 def userprofile(request):
     if request.user.is_authenticated:
         enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).prefetch_related('id_category')
-        return render(request, 'authentication/userprofile.html', {'enrolled_categories': enrolled_categories})
+        profile = UserProfile.objects.get(user_id=request.user.user_id)
+        return render(request, 'authentication/userprofile.html', {'enrolled_categories': enrolled_categories, 'profile': profile})
     else:
         return redirect('home')
 
@@ -290,6 +291,7 @@ def mycourses(request):
 def mycourse_detail(request):
     if request.method == 'POST':
         id_course = request.POST.get('ID_COURSE')
+        request.session['id_course'] = id_course
     else:
         id_course = request.session.get('id_course')
     spec_course = Course.objects.get(ID_COURSE=id_course)
@@ -308,7 +310,8 @@ def mycourse_detail(request):
 
 def addunit(request):
     if request.method == 'POST':
-        id_course = request.POST.get('ID_COURSE')
+        id_course = request.session.get('id_course')
+        #id_course = request.POST.get('ID_COURSE')
         newunit = TeachingUnit()
         course = Course.objects.get(ID_COURSE=id_course)
         newunit.ID_COURSE = course
