@@ -406,9 +406,13 @@ def view_text_file(request, file_path):
 def otherprofile(request):
     if request.method == "POST":
         user_information = User.objects.get(user_id=request.POST.get('user_id'))
-        user_profile_information = UserProfile.objects.get(user_id = user_information)
-        print(user_profile_information.description)
-        if not user_profile_information.picture:
+        try:
+            user_profile_information = UserProfile.objects.get(user_id = user_information)
+            if not user_profile_information.picture:
+                user_profile_information.picture = " "
+        except:
+            user_profile_information = UserProfile()
             user_profile_information.picture = " "
+            user_profile_information.description = " "
         return render( request, 'authentication/otherprofile.html', {'user_information': user_information,'user_profile_information':user_profile_information})
 

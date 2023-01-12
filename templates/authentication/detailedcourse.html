@@ -12,7 +12,7 @@
       <p class="text-center">Category: {{category_name}}</p>
       {% if request.user.is_authenticated %}
         {% if course.PRICE > 0 %}
-        <form action="buy_course" method="POST"> 
+        <form action="enroll_course" method="POST"> 
           {% csrf_token %}
           <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
           <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
@@ -49,7 +49,13 @@
         <tbody>
           {% for comments in comments %}
             <tr>
-              <th scope="row">{{ comments.user_id.username }}</th>
+              <form method="POST" action="otherprofile">
+                {% csrf_token %}
+                <th scope="row">
+                    <button type="submit" name="user_id" value="{{comments.user_id.user_id}}">{{ comments.user_id.username }}</button>
+                </th>
+              </form>
+              
               <td>{{ comments.RATE }}</td>
               <td>{{ comments.COMMENT }}</td>
             </tr>
