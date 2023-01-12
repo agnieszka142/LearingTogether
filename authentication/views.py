@@ -58,7 +58,6 @@ def signup(request):
 
 def signin(request):
     logout(request)
-    
     if request.method == "POST":
         username = request.POST['username'] 
         password = request.POST['pass1']  
@@ -67,25 +66,24 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 try:
-                    #print("TRYING")
+                    print("TRYING")
                     user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
-                    request.session['user_data_extra'] = {
-                    'description': user_data_extra.description,
-                    'picture': user_data_extra.picture.url
-                    }
+                    request.session['description'] = user_data_extra.description
+                    request.session['picture'] = user_data_extra.picture.url
+
                 except:
+                    print("Failed Trying")
                     try:
+                        print("Trying to grab description and setting pic to none")
                         user_data_extra = UserProfile.objects.get(user_id=request.user.user_id)
-                        request.session['user_data_extra'] = {
-                            'description': user_data_extra.description,
-                            'picture': None
-                        }
+                        request.session['description'] = user_data_extra.description
+                        request.session['picture'] = None
                     except:
-                        request.session['user_data_extra'] = {
-                        'description': " ",
-                        'picture': None 
-                        }
+                        print("Failed to grab description and setting pic to none")
+                        request.session['description'] = " "
+                        request.session['picture'] = None
                 administrator = Administrator.objects.filter(user_id=request.user.user_id).exists()
+                #checking if user is an administrator :)))
                 if administrator:
                     request.session['user_data_extra'] = { 'administrator': True }
                 else:
@@ -156,10 +154,8 @@ def user_profile_save(request):
                 userprofile.picture = userprofile.picture or None
         userprofile.description = request.POST.get('description')
         userprofile.save()
-        request.session['user_data_extra'] = {
-                 'description': userprofile.description,
-                  'picture': userprofile.picture.url if userprofile.picture else None
-                    }
+        request.session['description'] = userprofile.description
+        request.session['picture'] = userprofile.picture.url if userprofile.picture else None
         return redirect('userprofile')
     else:
         return redirect('userprofile')
@@ -286,8 +282,7 @@ def payment(request):
 def userprofile(request):
     if request.user.is_authenticated:
         enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).prefetch_related('id_category')
-        profile = UserProfile.objects.get(user_id=request.user.user_id)
-        return render(request, 'authentication/userprofile.html', {'enrolled_categories': enrolled_categories, 'profile': profile})
+        return render(request, 'authentication/userprofile.html', {'enrolled_categories': enrolled_categories})
     else:
         return redirect('home')
 
