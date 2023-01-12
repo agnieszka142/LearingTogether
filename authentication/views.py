@@ -9,6 +9,7 @@ from authentication.models import User, Category, FavCategories, UserProfile, Co
 from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, Administrator
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
+from mimetypes import guess_type
 
 # Create your views here.
 def home(request):
@@ -312,10 +313,14 @@ def mycourse_detail(request):
     course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
     course_grades = course_grades.select_related('user_id')
     teaching_units = TeachingUnit.objects.filter(ID_COURSE=id_course)
+    materials = TUMaterials.objects.filter(ID_TEACHINGUNIT__in=teaching_units.values_list('ID_TEACHINGUNIT', flat=True))
+    for material in materials:
+        material.file_type, encoding = guess_type(material.MATERIAL.url)
     return render(request, 'authentication/mycourse_detail.html', {'course': spec_course,
                                                                     'category_name': category_name,
                                                                     'comments': course_grades,
-                                                                    'teaching_units': teaching_units})
+                                                                    'teaching_units': teaching_units,
+                                                                    'materials': materials})
 
 
 def addunit(request):
@@ -378,5 +383,31 @@ def take_admin(request):
         obj = Administrator.objects.get(user_id=user_id)
         obj.delete()
         return redirect('administrator')
+
+def addmaterial(request):
+    if request.method == "POST":
+        id_unit = request.POST.get('id_unit')
+        if id_unit:
+            request.session['id_unit'] = id_unit
+        else:
+            id_unit = request.session.get('id_unit')
+
+        newmaterial = TUMaterials()
+        newmaterial.ID_TEACHINGUNIT = TeachingUnit.objects.get(ID_TEACHINGUNIT=id_unit)
+        material = request.FILES.get('material')
+        explanation = request.POST.get('explanation')
+        print(material, explanation)
+        if material and explanation:
+            newmaterial.MATERIAL = material
+            newmaterial.EXPLANATION = explanation
+            newmaterial.save()
+            return redirect('mycourse_detail')
+        else:
+            return render(request, 'authentication/addmaterial.html', {'id_unit': id_unit})
+
+def view_text_file(request, file_path):
+    with open(file_path, 'r') as f:
+        content = f.read()
+    return HttpResponse(content, content_type='text/plain')
 
 

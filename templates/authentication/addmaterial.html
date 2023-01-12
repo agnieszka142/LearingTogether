@@ -1,0 +1,25 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+<div class="container-fluid" style="padding: 20px; width: 55%;">
+<div class="mx-auto">
+<form class="mx-auto" style="max-width: 400px; margin-left:auto; margin-right:auto;" method="post" action="/addmaterial" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2>Here you can add new material!</h2>
+    {% if request.user.is_authenticated%}
+        <div class="form-group">
+            <label for="name">Choose the file:</label>
+            <input type="file" class="form-control-file" name="material">
+        </div>    
+        <div class="form-group">
+            <label for="name">Explanation:</label>
+            <input type="text" class="form-control" id="explanation"  name="explanation" placeholder="Describe this material" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    {% else %}
+        <h5>Sign in to add new materials!</h5>
+    {%endif%}
+</form>
+</div>
+</div>
+{% endblock content %}

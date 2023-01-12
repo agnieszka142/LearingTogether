@@ -32,4 +32,6 @@ urlpatterns = [
     path('user_admin_delete', views.user_admin_delete, name='user_admin_delete'),
     path('grant_admin', views.grant_admin, name='grant_admin'),
     path('take_admin', views.take_admin, name='take_admin'),
+    path('addmaterial', views.addmaterial, name='addmaterial'),
+    path('textfile/<str:file_path>', views.view_text_file, name='textfile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
