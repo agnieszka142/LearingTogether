@@ -1,0 +1,25 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated%}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8" >
+                <p> {{user_information.username}} </p>
+                <p> {{user_information.name}} </p>
+                <p> {{user_information.surname}} </p>
+                <p> {{user_information.gender}} </p>
+                <p> {{user_information.email}} </p>
+                <p> {{user_profile_information.description}} </p>
+                <img src="{{user_profile_information.picture.url}}" alt="Failed to display profile picture" height="200px">
+            </div>
+
+            <div class="col-md-4">
+            
+
+            </div>
+        </div>
+    </div>
+{%  endif   %}
+{% endblock %}

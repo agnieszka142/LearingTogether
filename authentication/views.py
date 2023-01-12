@@ -276,9 +276,6 @@ def addcomment(request):
         )
         return redirect('course')
 
-def payment(request):
-    return ()
-
 def userprofile(request):
     if request.user.is_authenticated:
         enrolled_categories = FavCategories.objects.filter(user_id=request.user.user_id).prefetch_related('id_category')
@@ -373,5 +370,13 @@ def take_admin(request):
         obj = Administrator.objects.get(user_id=user_id)
         obj.delete()
         return redirect('administrator')
-
+    
+def otherprofile(request):
+    if request.method == "POST":
+        user_information = User.objects.get(user_id=request.POST.get('user_id'))
+        user_profile_information = UserProfile.objects.get(user_id = user_information)
+        print(user_profile_information.description)
+        if not user_profile_information.picture:
+            user_profile_information.picture = " "
+        return render( request, 'authentication/otherprofile.html', {'user_information': user_information,'user_profile_information':user_profile_information})
 

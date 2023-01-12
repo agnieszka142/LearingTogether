@@ -99,8 +99,13 @@
                         <tbody>
                     {% for user in all_users %}
                     <tr>
-                        <th scope="row">{{user.user_id}}</th>
-                        <td>{{user.username}}</td>
+                        <form method="POST" action="otherprofile">
+                            {% csrf_token %}
+                            <th scope="row">
+                                <button type="submit" name="user_id" value="{{user.user_id}}">{{user.user_id}}</button>
+                            </th>
+                        </form>
+                        <td>{{user.username}}</td>  
                         <td>{{user.name}}</td>  
                         <td>{{user.surname}}</td>   
                         <td>{{user.gender}}</td> 
