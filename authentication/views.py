@@ -245,13 +245,21 @@ def course_details(request):
         except:
             category_name = "Category Deleted"
         course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
+        teaching_units = TeachingUnit.objects.filter(ID_COURSE=id_course)
+        materials = TUMaterials.objects.filter(ID_TEACHINGUNIT__in=teaching_units.values_list('ID_TEACHINGUNIT', flat=True))
+        for material in materials:
+            material.file_type, encoding = guess_type(material.MATERIAL.url)
         if request.user.is_authenticated:
             is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
             course_grades = course_grades.select_related('user_id')
-            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
+            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades,
+                                                                    'teaching_units': teaching_units,
+                                                                    'materials': materials})
         else:
             is_enrolled = False
-            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades})
+            return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades,
+                                                                    'teaching_units': teaching_units,
+                                                                    'materials': materials})
             
         
 def addcategory(request):

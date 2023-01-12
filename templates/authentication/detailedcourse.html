@@ -100,4 +100,29 @@
     }
   }
 </script>
+
+<h2>Teaching Units:</h2>
+{% for unit in teaching_units %}
+    <h3>{{ unit.NAME }}</h3>
+    {{ unit.DESCRIPTION }}
+    <p>
+    {% if enrolled_courses %}
+    {% for material in materials %}
+        {% if material.ID_TEACHINGUNIT.ID_TEACHINGUNIT == unit.ID_TEACHINGUNIT %}
+          <h4>{{ material.EXPLANATION }}</h4>
+          {% if material.file_type == 'image/jpeg' %}
+            <img src="{{material.MATERIAL.url}}" alt="file" height="300px">
+          {% elif material.file_type == 'video/mp4' %}
+            <video src="{{material.MATERIAL.url}}" controls height="300px"></video>
+          {% elif material.file_type == 'text/plain' %}
+            <a href="{% url 'textfile' file_path=material.MATERIAL.path %}">View Text File</a>
+          {% else %}
+            <a href="{{material.MATERIAL.url}}">Download file</a>
+          {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+    </p>
+{% endfor %}
+
 {% endblock %}
