@@ -5,28 +5,28 @@
 
 
 <div class="container">
-    <div class="row">
-      <div class="col-md-8" >
-        <h1 class="text-center">Welcome to Manzana</h1>
-        <p class="text-center">We are an e-learning platform that offers a wide range of courses and learning resources.</p>
-        {% if request.user.is_authenticated%}
-            <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
-            <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
-            <a href="{% url 'mycourses' %}" role="button" class="btn btn-primary">My Courses</a>
-          {%endif%}
-          <a href="{% url 'course' %}" role="button" class="btn btn-primary">All Courses</a>
-      </div>
-      <div class="col-md-4">
-      
-      {% if request.user.is_authenticated %}
-        <p>Email: {{ request.user.email }}</p>
-        <p>First name: {{ request.user.name }}</p>
-        <p>Second name: {{ request.user.surname }}</p>
-      {% endif %}
-      
+  <div class="row">
+    <div class="col-md-8" >
+      <h1 class="text-center text-light">Welcome to Manzana</h1>
+      <p class="text-center text-light">We are an e-learning platform that offers a wide range of courses and learning resources.</p>
+      {% if request.user.is_authenticated%}
+          <a href="{% url 'favcategories' %}" role="button" class="btn btn-primary">Favorite Categories</a>
+          <a href="{% url 'addcourse' %}" role="button" class="btn btn-primary">Add Course</a>
+          <a href="{% url 'mycourses' %}" role="button" class="btn btn-primary">My Courses</a>
+        {%endif%}
+        <a href="{% url 'course' %}" role="button" class="btn btn-primary">All Courses</a>
+    </div>
+    <div class="col-md-4">
     
-      </div>
+    {% if request.user.is_authenticated %}
+      <p class="text-light">Email: {{ request.user.email }}</p>
+      <p class="text-light">First name: {{ request.user.name }}</p>
+      <p class="text-light">Second name: {{ request.user.surname }}</p>
+    {% endif %}
+    
+  
     </div>
   </div>
+</div>
 {% endblock content %}
 

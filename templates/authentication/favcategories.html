@@ -3,67 +3,67 @@
 
 {% block content %}
 <div class="container">
-    <div class="row">
-      <div class="col-md-8" >
-        <h1 class="text-center">Select your favorite Categories</h1>
-        <a href="{% url 'addcategory' %}" role="button" class="btn btn-primary">Add Category</a>
-        {% if request.user.is_authenticated%}
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-            {% for category in all_categories %}
+  <div class="row">
+    <div class="col-md-8">
+      <h1 class="text-center text-white">Select your favorite Categories</h1>
+      <a href="{% url 'addcategory' %}" role="button" class="btn btn-primary">Add Category</a>
+      {% if request.user.is_authenticated%}
+          <table class="table table-dark">
+              <thead>
+              <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+          {% for category in all_categories %}
 
-            <tr>
-                <th scope="row">{{category.id_category}}</th>
-                <td>{{category.name}}</td>
-                <td>{{category.description}}</td>
-                <td>
-                {% if category.id_category in enrolled_categories %}
-                  <form action="delete_fav_category" method="POST"> 
-                    {% csrf_token %}
-                    <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-                    <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                    <button type="submit" class="btn btn-alert">Remove from Favorites</button>
-                  </form> 
-                    {% else %}
-                  <form action="enroll_fav_category" method="POST"> 
-                    {% csrf_token %}
+          <tr>
+              <th scope="row">{{category.id_category}}</th>
+              <td>{{category.name}}</td>
+              <td>{{category.description}}</td>
+              <td>
+              {% if category.id_category in enrolled_categories %}
+                <form action="delete_fav_category" method="POST"> 
+                  {% csrf_token %}
                   <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                   <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                  <button type="submit" class="btn btn-success">Add to Favorites</button>
-                  </form> 
-                  {% endif %}
-                    
-                </td>         
-                </tr>     
-            {% endfor %}
-                </tbody>
-            </table>
+                  <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+                </form> 
+                  {% else %}
+                <form action="enroll_fav_category" method="POST"> 
+                  {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+                <input type="hidden" name="id_category" value="{{ category.id_category }}">
+                <button type="submit" class="btn btn-success">Add to Favorites</button>
+                </form> 
+                {% endif %}
+                  
+              </td>         
+              </tr>     
+          {% endfor %}
+              </tbody>
+          </table>
 
-        {%endif%}
-      </div>
-      <div class="col-md-4">
-      
-      {% if request.user.is_authenticated %}
-        <p>Email: {{ request.user.email }}</p>
-        <p>First name: {{ request.user.name }}</p>
-        <p>Second name: {{ request.user.surname }}</p>
-        <form action="{% url 'signout' %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">Sign Out</button>
-      </form>
-      
-      {% endif %}
+      {%endif%}
+    </div>
+    <div class="col-md-4">
     
-      </div>
+    {% if request.user.is_authenticated %}
+      <p class="text-white">Email: {{ request.user.email }}</p>
+      <p class="text-white">First name: {{ request.user.name }}</p>
+      <p class="text-white">Second name: {{ request.user.surname }}</p>
+      <form action="{% url 'signout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sign Out</button>
+    </form>
+    
+    {% endif %}
+  
     </div>
   </div>
+</div>
 {% endblock content %}
 

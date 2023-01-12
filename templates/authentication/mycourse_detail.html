@@ -5,27 +5,27 @@
 <div class="container my-4">
   <div class="row">
     <div class="col-md-8">
-      <h1 class="text-center">{{course.NAME}}</h1>
-      <h3 class="text-center">{{course.DESCRIPTION}}</h3>
-      <p class="text-center">Price: {{course.PRICE}}</p>
-      <p class="text-center">Duration: {{course.DURATION}}</p>
-      <p class="text-center">Category: {{category_name}}</p>
+      <h1 class="text-center text-white">{{course.NAME}}</h1>
+      <h3 class="text-center text-white">{{course.DESCRIPTION}}</h3>
+      <p class="text-center text-white">Price: {{course.PRICE}}</p>
+      <p class="text-center text-white">Duration: {{course.DURATION}}</p>
+      <p class="text-center text-white">Category: {{category_name}}</p>
     </div>
     <div class="col-md-4">
-      <table class="table">
+      <table class="table table-dark">
         <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Comment</th>
+            <th scope="col" class="text-white">Name</th>
+            <th scope="col" class="text-white">Rate</th>
+            <th scope="col" class="text-white">Comment</th>
           </tr>
         </thead>
         <tbody>
           {% for comments in comments %}
             <tr>
-              <th scope="row">{{ comments.user_id.username }}</th>
-              <td>{{ comments.RATE }}</td>
-              <td>{{ comments.COMMENT }}</td>
+              <th scope="row" class="text-white">{{ comments.user_id.username }}</th>
+              <td class="text-white">{{ comments.RATE }}</td>
+              <td class="text-white">{{ comments.COMMENT }}</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -49,10 +49,10 @@
   }
 </script>
 
-<h2>Teaching Units:</h2>
+<h2 class="text-white">Teaching Units:</h2>
 {% for unit in teaching_units %}
-    <h3>{{ unit.NAME }}</h3>
-    {{ unit.DESCRIPTION }}
+    <h3 class="text-white">{{ unit.NAME }}</h3>
+    <p class="text-white">{{ unit.DESCRIPTION }}</p>
     <form action="addmaterial" method="POST"> 
       {% csrf_token %}
       <input type="hidden" name="id_unit" value="{{ unit.ID_TEACHINGUNIT }}">
@@ -64,16 +64,16 @@
       {{ material.ID_TEACHINGUNIT.ID_TEACHINGUNIT }}
       {{ unit.ID_TEACHINGUNIT }}-->
         {% if material.ID_TEACHINGUNIT.ID_TEACHINGUNIT == unit.ID_TEACHINGUNIT %}
-          <h4>{{ material.EXPLANATION }}</h4>
+          <h4 class="text-white">{{ material.EXPLANATION }}</h4>
           <!--file type: {{ material.filetype }}-->
           {% if material.file_type == 'image/jpeg' %}
             <img src="{{material.MATERIAL.url}}" alt="file" height="300px">
           {% elif material.file_type == 'video/mp4' %}
             <video src="{{material.MATERIAL.url}}" controls height="300px"></video>
           {% elif material.file_type == 'text/plain' %}
-            <a href="{% url 'textfile' file_path=material.MATERIAL.path %}">View Text File</a>
+            <a href="{% url 'textfile' file_path=material.MATERIAL.path %}" class="text-white">View Text File</a>
           {% else %}
-            <a href="{{material.MATERIAL.url}}">Download file</a>
+            <a href="{{material.MATERIAL.url}}" class="text-white">Download file</a>
           {% endif %}
         {% endif %}
     {% endfor %}

@@ -19,7 +19,7 @@
           <button type="submit" class="btn btn-success">Buy {{course.PRICE}}</button>
         </form> 
       {% else %}
-        {% if course.ID_COURSE in enrolled_courses %}
+        {% if enrolled_courses %}
           <form action="deroll_course" method="POST"> 
             {% csrf_token %}
             <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
@@ -106,12 +106,26 @@
     }
   }
 </script>
-
+{% if enrolled_courses %}
 <h2>Teaching Units:</h2>
+
 {% for unit in teaching_units %}
-    <h3>{{ unit.NAME }}</h3>
-    {{ unit.DESCRIPTION }}
+    <button type="button" class="btn btn-primary" onclick="show{{ unit.ID_TEACHINGUNIT }}()">Show {{ unit.NAME }}</button>
+    <div class="container" id="{{ unit.ID_TEACHINGUNIT }}" style="display:none;">
+
+
+      <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+        <div class="card-header">
+          {{ unit.NAME }}
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">Unit Description</h5>
+        <p class="card-text">{{ unit.DESCRIPTION }}</p>
+        </div>
+      </div>
+    
     <p>
+   
     {% if enrolled_courses %}
     {% for material in materials %}
         {% if material.ID_TEACHINGUNIT.ID_TEACHINGUNIT == unit.ID_TEACHINGUNIT %}
@@ -126,9 +140,24 @@
             <a href="{{material.MATERIAL.url}}">Download file</a>
           {% endif %}
         {% endif %}
+        
+
     {% endfor %}
     {% endif %}
     </p>
+  </div>
+  <script>
+    function show{{ unit.ID_TEACHINGUNIT }}() {
+      var form = document.getElementById('{{ unit.ID_TEACHINGUNIT }}');
+      if (form.style.display === 'block') {
+        form.style.display = 'none';
+      } else {
+        form.style.display = 'block';
+      }
+    }
+  </script>
 {% endfor %}
+
+{% endif %}
 
 {% endblock %}

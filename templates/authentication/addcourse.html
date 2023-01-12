@@ -2,41 +2,41 @@
 
 {% block content %}
 <div class="container-fluid" style="padding: 20px; width: 55%;">
-<div class="mx-auto">
-<form class="mx-auto" style="max-width: 400px; margin-left:auto; margin-right:auto;" method="post" action="/addcourse">
-    {% csrf_token %}
-    <h2>Here you can create a new course!</h2>
-    {% if request.user.is_authenticated%}
-        <div class="form-group">
-            <label for="name">Course name:</label>
-            <input type="text" class="form-control" id="name"  name="name" placeholder="Enter course name" required>
-        </div>    
-        <div class="form-group">
-            <label for="id_category">Course category:</label>
-            <select class="form-control" name="id_category" id="id_category">
-                {% for category in categories %}
-                    <option value="{{ category.id_category }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="name">Description:</label>
-            <input type="text" class="form-control" id="description"  name="description" placeholder="Describe your course" required>
-        </div>
-        <div class="form-group">
-            <label for="name">Estimated time to complete:</label>
-            <input type="text" class="form-control" id="duration"  name="duration" placeholder="Enter completion time" required>
-        </div>
-        <div class="form-group">
-            <label for="name">Price:</label>
-            <input type="text" class="form-control" id="price"  name="price" placeholder="Enter course price" required>
-        </div>
-        <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    {% else %}
-        <h5>Sign in to add new courses!</h5>
-    {%endif%}
-</form>
-</div>
-</div>
+    <div class="mx-auto bg-dark text-white">
+    <form class="mx-auto bg-dark text-white" style="max-width: 400px; margin-left:auto; margin-right:auto;" method="post" action="/addcourse">
+        {% csrf_token %}
+        <h2>Here you can create a new course!</h2>
+        {% if request.user.is_authenticated%}
+            <div class="form-group">
+                <label for="name" class="text-white">Course name:</label>
+                <input type="text" class="form-control bg-dark text-white" id="name"  name="name" placeholder="Enter course name" required>
+            </div>    
+            <div class="form-group">
+                <label for="id_category" class="text-white">Course category:</label>
+                <select class="form-control bg-dark text-white" name="id_category" id="id_category">
+                    {% for category in categories %}
+                        <option value="{{ category.id_category }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name" class="text-white">Description:</label>
+                <input type="text" class="form-control bg-dark text-white" id="description"  name="description" placeholder="Describe your course" required>
+            </div>
+            <div class="form-group">
+                <label for="name" class="text-white">Estimated time to complete:</label>
+                <input type="text" class="form-control bg-dark text-white" id="duration"  name="duration" placeholder="Enter completion time" required>
+            </div>
+            <div class="form-group">
+                <label for="name" class="text-white">Price:</label>
+                <input type="text" class="form-control bg-dark text-white" id="price"  name="price" placeholder="Enter course price" required>
+            </div>
+            <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        {% else %}
+            <h5 class="text-white">Sign in to add new courses!</h5>
+        {%endif%}
+    </form>
+    </div>
+    </div>
 {% endblock content %}
