@@ -38,7 +38,7 @@
       {% endif %}
     </div>
     <div class="col-md-4">
-      <table class="table">
+      <table class="table table-dark">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -52,7 +52,7 @@
               <form method="POST" action="otherprofile">
                 {% csrf_token %}
                 <th scope="row">
-                    <button type="submit" name="user_id" value="{{comments.user_id.user_id}}">{{ comments.user_id.username }}</button>
+                    <button type="submit"  class="btn btn-warning" name="user_id" value="{{comments.user_id.user_id}}">{{ comments.user_id.username }}</button>
                 </th>
               </form>
               
@@ -112,14 +112,13 @@
 {% for unit in teaching_units %}
     <button type="button" class="btn btn-primary" onclick="show{{ unit.ID_TEACHINGUNIT }}()">Show {{ unit.NAME }}</button>
     <div class="container" id="{{ unit.ID_TEACHINGUNIT }}" style="display:none;">
-
-
-      <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+      <div class="row justify-content-center">
+        <p></p>
+      <div class="card text-white bg-success" style="width:400px">
         <div class="card-header">
-          {{ unit.NAME }}
+          <h1> {{ unit.NAME }} </h1>
         </div>
         <div class="card-body">
-        <h5 class="card-title">Unit Description</h5>
         <p class="card-text">{{ unit.DESCRIPTION }}</p>
         </div>
       </div>
@@ -129,22 +128,29 @@
     {% if enrolled_courses %}
     {% for material in materials %}
         {% if material.ID_TEACHINGUNIT.ID_TEACHINGUNIT == unit.ID_TEACHINGUNIT %}
-          <h4>{{ material.EXPLANATION }}</h4>
+        <div class="card bg-success" style="width:400px">
+          
           {% if material.file_type == 'image/jpeg' %}
-            <img src="{{material.MATERIAL.url}}" alt="file" height="300px">
+            <img class="card-img-top" src="{{material.MATERIAL.url}}" alt="file">
           {% elif material.file_type == 'video/mp4' %}
-            <video src="{{material.MATERIAL.url}}" controls height="300px"></video>
+            <video class="card-img-top" src="{{material.MATERIAL.url}}" controls height="300px"></video>
           {% elif material.file_type == 'text/plain' %}
-            <a href="{% url 'textfile' file_path=material.MATERIAL.path %}">View Text File</a>
+            <a class="card-img-top" href="{% url 'textfile' file_path=material.MATERIAL.path %}">View Text File</a>
           {% else %}
             <a href="{{material.MATERIAL.url}}">Download file</a>
+            
           {% endif %}
+          <div class="card-body">
+            <p class="card-text"> {{ material.EXPLANATION }}</p>
+          </div>
+      </div>
         {% endif %}
         
 
     {% endfor %}
     {% endif %}
     </p>
+  </div>
   </div>
   <script>
     function show{{ unit.ID_TEACHINGUNIT }}() {
