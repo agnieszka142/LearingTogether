@@ -108,7 +108,7 @@
         </div>
         {% endif %} 
         
-        {% if online_chat.date > now and request.user.is_authenticated %}
+        {% if online_chat.date and request.user.is_authenticated %}
         <div class="card bg-success">
           <div class="card-header">
             Online Chat
