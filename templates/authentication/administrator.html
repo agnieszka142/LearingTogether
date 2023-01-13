@@ -53,6 +53,7 @@
                                 <form action="editcourse" method="POST"> 
                                     {% csrf_token %}
                                     <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                                    <input type="hidden" name="from_mycourses" value="false">
                                     <button type="submit" class="btn btn-secondary"><span class="glyphicon glyphicon-edit"></span></button>
                                 </form> 
                             </td>

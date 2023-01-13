@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import template
 from django.contrib.auth import get_user_model
 from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, TeachingUnit
-from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, Administrator
+from authentication.models import User, Category, FavCategories, UserProfile, Course, CourseEnrolled, TeachingUnit,TUMaterials, CourseGrade, UserPayment, CourseOwner, Administrator, OnlineChat
 from django.core import serializers
 from django.utils.datastructures import MultiValueDictKeyError
 from mimetypes import guess_type
@@ -252,9 +252,17 @@ def course_details(request):
         if request.user.is_authenticated:
             is_enrolled = CourseEnrolled.objects.filter(user_id=request.user, ID_COURSE=id_course).exists()
             course_grades = course_grades.select_related('user_id')
+            try:
+                online_chat = OnlineChat.objects.get(ID_COURSE=spec_course)
+
+            except:
+                online_chat = OnlineChat()
+                online_chat.date = None
+                online_chat.link = "Not set"
             return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades,
                                                                     'teaching_units': teaching_units,
-                                                                    'materials': materials})
+                                                                    'materials': materials,
+                                                                    'online_chat': online_chat})
         else:
             is_enrolled = False
             return render(request, 'authentication/detailedcourse.html', {'course': spec_course,'enrolled_courses': is_enrolled, 'category_name': category_name, 'comments':course_grades,
@@ -294,10 +302,11 @@ def userprofile(request):
 
 def mycourses(request):
     owned = CourseOwner.objects.filter(user_id=request.user).values_list('ID_COURSE', flat=True)
+    online_chat = OnlineChat.objects.all()
     courses = []
     for course in owned:
         courses.append(Course.objects.get(ID_COURSE=course))
-    return render(request, 'authentication/mycourses.html', {'courses': courses}) 
+    return render(request, 'authentication/mycourses.html', {'courses': courses, 'online_chats': online_chat}) 
 
 def mycourse_detail(request):
     if request.method == 'POST':
@@ -310,6 +319,9 @@ def mycourse_detail(request):
         category_name = spec_course.ID_CATEGORY.name
     except:
         category_name = "Category Deleted"
+    
+    
+
     course_grades = CourseGrade.objects.filter(ID_COURSE=id_course)
     course_grades = course_grades.select_related('user_id')
     teaching_units = TeachingUnit.objects.filter(ID_COURSE=id_course)
@@ -452,3 +464,37 @@ def saveedited(request):
         else:
             return redirect('administrator')
     
+def addchat(request):
+    if request.method == "POST":
+        return render( request, 'authentication/addchat.html', {'id_course': request.POST.get('ID_COURSE')})
+    else:
+        return redirect('home')
+    
+def savechat(request):
+    if request.method == "POST":
+        ID_COURSE = request.POST.get('ID_COURSE', '')
+        date = request.POST.get('date', '')
+        link = request.POST.get('link', '')
+
+        online_chat = OnlineChat.objects.filter(ID_COURSE=Course.objects.get(ID_COURSE=ID_COURSE)).first()
+        if online_chat:
+            online_chat.date = date
+            online_chat.link = link
+            online_chat.save()
+        else:
+            online_chat = OnlineChat(ID_COURSE=Course.objects.get(ID_COURSE=ID_COURSE), date=date, link=link)
+            online_chat.save()
+
+        return redirect('mycourses')
+    else:
+        return redirect('home')
+    
+def deletechat(request):
+    if request.method == "POST":
+        ID_COURSE = request.POST.get('ID_COURSE', '')
+        online_chat = OnlineChat.objects.filter(ID_COURSE=Course.objects.get(ID_COURSE=ID_COURSE)).first()
+        if online_chat:
+            online_chat.delete()
+        return redirect('mycourses')
+    else:
+        return redirect('mycourses')

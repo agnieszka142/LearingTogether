@@ -118,3 +118,12 @@ class Administrator(models.Model):
     class Meta:
         managed = True
         db_table = 'Administrator'
+        
+class OnlineChat(models.Model):
+    ID_ONCH = models.AutoField(primary_key=True)
+    ID_COURSE = models.ForeignKey('Course', on_delete=models.CASCADE)
+    date = models.DateField()
+    link = models.CharField(max_length=255)
+    class Meta:
+        managed = True
+        db_table = 'OnlineChat'

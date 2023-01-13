@@ -1,0 +1,22 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+<div class="container">
+    <form action="savechat" method="post">
+        {% csrf_token %}
+      <div class="form-group">
+        <label for="ID_COURSE">Course ID:</label>
+        <input type="text" class="form-control" id="ID_COURSE" name="ID_COURSE" value="{{id_course}}" readonly>
+      </div>
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" class="form-control" id="date" name="date">
+      </div>
+      <div class="form-group">
+        <label for="link">Link:</label>
+        <input type="text" class="form-control" id="link" name="link">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+{% endblock content %}

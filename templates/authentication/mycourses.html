@@ -19,10 +19,14 @@
               <th scope="col">Duration</th>
               <th scope="col">Edit</th>
               <th scope="col">Details</th>
+              <th scope="col">Run Chat</th>
+              <th scope="col">Del Chat</th>
+              <th scope="col">Date</th>
           </tr>
           </thead>
           <tbody>
               {% for course in courses %}
+              {% for online_chat in online_chats %}
               <tr>
                   <th scope="row">{{course.ID_COURSE}}</th>
                   <td>{{course.NAME}}</td>
@@ -45,7 +49,23 @@
                         <button type="submit" class="btn btn-secondary">Edit</button>
                     </form> 
                 </td>
+                <td>
+                  <form action="addchat" method="POST"> 
+                      {% csrf_token %}
+                      <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                      <button type="submit" class="btn btn-secondary">Start Chat!</button>
+                  </form> 
+              </td>
+              <td>
+                <form action="deletechat" method="POST"> 
+                    {% csrf_token %}
+                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                    <button type="submit" class="btn btn-warning">Delete Chat!</button>
+                </form> 
+            </td>
+            <td>{{online_chat.date}} </td>
               </tr>     
+              {% endfor %}
               {% endfor %}
           </tbody>
       </table>

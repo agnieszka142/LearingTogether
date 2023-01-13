@@ -78,6 +78,7 @@
       {% if request.user.is_authenticated %}
       {% if comments %}
       <button type="button" class="btn btn-primary" onclick="displayForm()">Rate Course!</button>
+      </br>
       {% else %}
       <button type="button" class="btn btn-primary" onclick="displayForm()">Be First to Rate Course!</button>
       {% endif %}
@@ -106,6 +107,18 @@
           </form>
         </div>
         {% endif %} 
+        
+        {% if online_chat.date > now and request.user.is_authenticated %}
+        <div class="card bg-success">
+          <div class="card-header">
+            Online Chat
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{online_chat.date}}</h5>
+            <a href="{{online_chat.link}}" class="card-link btn btn-primary">Link</a>
+          </div>
+          {% endif %}
+        </div>
     </div>
   </div>
 </div>
