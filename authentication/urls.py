@@ -34,4 +34,4 @@ urlpatterns = [
     path('addmaterial', views.addmaterial, name='addmaterial'),
     path('textfile/<str:file_path>', views.view_text_file, name='textfile'),
     path('otherprofile', views.otherprofile, name='otherprofile'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
