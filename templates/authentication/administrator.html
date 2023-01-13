@@ -11,12 +11,15 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Name</th>
+                        <th scope="col"> <span class="glyphicon glyphicon-comment"></span></th>
                         <th scope="col">Description</th>
+                        <th scope="col"> <span class="glyphicon glyphicon-comment"></span></th>
                         <th scope="col">Price</th>
                         <th scope="col">Duration</th>
                         <th scope="col">Category</th>
                         <th scope="col">Details </th>
                         <th scope="col">Action</th>
+                        <th scope="col">Edit </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -24,7 +27,9 @@
                         <tr>
                             <th scope="row">{{course.ID_COURSE}}</th>
                             <td>{{course.NAME}}</td>
-                            <td>{{course.DESCRIPTION}}</td>
+                            <td colspan="3">
+                                <span id="{{course.ID_COURSE}}">{{course.DESCRIPTION|slice:":50"}}...</span>
+                            </td>
                             <td>{{course.PRICE}}</td>
                             <td>{{course.DURATION}}</td>
                             <td>{{course.CATEGORY_NAME}}</td>
@@ -34,16 +39,24 @@
                                     <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                                     <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
                                     
-                                    <button type="submit" class="btn btn-success">Details</button>
+                                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-list-alt"></span></button>
                                 </form> 
                             </td>
                             <td>
                                 <form action="course_admin_delete" method="POST"> 
                                     {% csrf_token %}
                                     <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
-                                    <button type="submit" class="btn btn-danger">Delete Course</button>
+                                    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
                                 </form> 
                             </td>
+                            <td>
+                                <form action="editcourse" method="POST"> 
+                                    {% csrf_token %}
+                                    <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                                    <button type="submit" class="btn btn-secondary"><span class="glyphicon glyphicon-edit"></span></button>
+                                </form> 
+                            </td>
+
                             </tr>     
                             {% endfor %}
                         </tbody>
@@ -66,15 +79,15 @@
                         <th scope="row">{{category.id_category}}</th>
                         <td>{{category.name}}</td>
                         <td>{{category.description}}</td>
-                        <td>
+
                             <td>
                                 <form action="category_admin_delete" method="POST"> 
                                     {% csrf_token %}
                                     <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                                    <button type="submit" class="btn btn-danger">Delete Category</button>
+                                    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
                                 </form> 
                             </td>
-                        </td>
+
                         </tr>     
                     {% endfor %}
                         </tbody>
@@ -114,7 +127,7 @@
                             <form action="user_admin_delete" method="POST"> 
                                 {% csrf_token %}
                                 <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                <button type="submit" class="btn btn-danger">Delete User</button>
+                                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
                             </form> 
                         </td>
                         <td>
@@ -122,13 +135,13 @@
                             <form action="grant_admin" method="POST"> 
                                 {% csrf_token %}
                                 <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                <button type="submit" class="btn btn-success">Grant Admin</button>
+                                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-eye-open"></span></button>
                             </form> 
                         {% else %}
                             <form action="take_admin" method="POST"> 
                                 {% csrf_token %}
                                 <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                <button type="submit" class="btn btn-danger">Remove Admin</button>
+                                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-eye-close"></span></button>
                             </form> 
                         {% endif %}
                         
@@ -168,5 +181,7 @@
           form.style.display = 'block';
         }
       }
+
+    
   </script>
 {% endblock %}

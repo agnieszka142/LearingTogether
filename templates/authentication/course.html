@@ -28,7 +28,7 @@
                 <tr>
                     <th scope="row">{{course.ID_COURSE}}</th>
                     <td>{{course.NAME}}</td>
-                    <td>{{course.DESCRIPTION}}</td>
+                    <td>{{course.DESCRIPTION|slice:":50"}}...</td>
                     <td>{{course.PRICE}}</td>
                     <td>{{course.DURATION}}</td>
                     <td>{{course.CATEGORY_NAME}}</td>

@@ -424,3 +424,31 @@ def otherprofile(request):
             user_profile_information.description = " "
         return render( request, 'authentication/otherprofile.html', {'user_information': user_information,'user_profile_information':user_profile_information})
 
+def editcourse(request):
+    if request.method == "POST":
+        id_course = request.POST.get('ID_COURSE')
+        from_mycourses = request.POST.get('from_mycourses')
+        return render(request, 'authentication/editcourse.html', {'categories':Category.objects.all(), 'course':Course.objects.get(ID_COURSE=id_course), 'from_mycourses': from_mycourses})
+    
+def saveedited(request):
+    if request.method == "POST":
+        id_course = request.POST.get('ID_COURSE')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        duration = request.POST.get('duration')
+        category = request.POST.get('category')
+
+        course = Course.objects.get(ID_COURSE=id_course)
+        course.NAME = name
+        course.DESCRIPTION = description
+        course.PRICE = price
+        course.DURATION = duration
+        course.ID_CATEGORY_id = category
+        course.save()
+        from_mycourses = request.POST.get('from_mycourses')
+        if from_mycourses:
+            return redirect('mycourses')
+        else:
+            return redirect('administrator')
+    

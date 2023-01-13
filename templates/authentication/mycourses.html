@@ -17,6 +17,8 @@
               <th scope="col">Description</th>
               <th scope="col">Price</th>
               <th scope="col">Duration</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Details</th>
           </tr>
           </thead>
           <tbody>
@@ -24,7 +26,7 @@
               <tr>
                   <th scope="row">{{course.ID_COURSE}}</th>
                   <td>{{course.NAME}}</td>
-                  <td>{{course.DESCRIPTION}}</td>
+                  <td>{{course.DESCRIPTION|slice:":50"}}...</td>
                   <td>{{course.PRICE}}</td>
                   <td>{{course.DURATION}}</td>
                   <td>
@@ -35,6 +37,14 @@
                       <button type="submit" class="btn btn-success">Details</button>
                     </form> 
                   </td>
+                  <td>
+                    <form action="editcourse" method="POST"> 
+                        {% csrf_token %}
+                        <input type="hidden" name="from_mycourses" value="true">
+                        <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+                        <button type="submit" class="btn btn-secondary">Edit</button>
+                    </form> 
+                </td>
               </tr>     
               {% endfor %}
           </tbody>

@@ -1,0 +1,34 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+<form action="saveedited" method="post">
+    {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ course.NAME }}" >
+            <input type="hidden" name="ID_COURSE" value="{{ course.ID_COURSE }}">
+            <input type="hidden" name="from_mycourses" value="{{ from_mycourses}}">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" >{{ course.DESCRIPTION }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" name="price" value="{{ course.PRICE }}" >
+        </div>
+        <div class="form-group">
+            <label for="duration">Duration</label>
+            <input type="number" class="form-control" id="duration" name="duration" value="{{ course.DURATION }}" >
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" name="category">
+            {% for category in categories %}
+                <option value="{{category.id_category}}" {% if category.id_category == course.ID_CATEGORY_id %} selected {% endif %}>{{category.name}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock content %}

@@ -34,4 +34,6 @@ urlpatterns = [
     path('addmaterial', views.addmaterial, name='addmaterial'),
     path('textfile/<str:file_path>', views.view_text_file, name='textfile'),
     path('otherprofile', views.otherprofile, name='otherprofile'),
+    path('editcourse', views.editcourse, name='editcourse'),
+    path('saveedited', views.saveedited, name='saveedited'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

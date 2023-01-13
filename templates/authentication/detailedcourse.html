@@ -5,11 +5,24 @@
 <div class="container my-4">
   <div class="row">
     <div class="col-md-8">
-      <h1 class="text-center">Name of Course: {{course.NAME}}</h1>
-      <h3 class="text-center">Description: {{course.DESCRIPTION}}</h3>
-      <p class="text-center">Price: {{course.PRICE}}</p>
-      <p class="text-center">Duration: {{course.DURATION}}</p>
-      <p class="text-center">Category: {{category_name}}</p>
+      <div class="card-deck">
+        <div class="card bg-success text-white">
+          <div class="card-header">
+            <h1 class="text-center">Name of Course: {{course.NAME}}</h1>
+          </div>
+          <div class="card-body">
+            <div class="card-title">              
+              <h3 class="text-center">Description: {{course.DESCRIPTION}}</h3>
+            </div>
+            <div class="card-text">
+              <p class="text-center"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Price: {{course.PRICE}}</p>
+              <p class="text-center"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Duration: {{course.DURATION}}</p>
+              <p class="text-center"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Category: {{category_name}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </br>
       {% if request.user.is_authenticated %}
         {% if course.PRICE > 0 %}
         <form action="enroll_course" method="POST"> 

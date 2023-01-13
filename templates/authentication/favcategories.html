@@ -8,7 +8,7 @@
       <h1 class="text-center text-white">Select your favorite Categories</h1>
       <a href="{% url 'addcategory' %}" role="button" class="btn btn-primary">Add Category</a>
       {% if request.user.is_authenticated%}
-          <table class="table table-dark">
+          <table class="table table-responsive table-dark">
               <thead>
               <tr>
                   <th scope="col">ID</th>
@@ -30,14 +30,14 @@
                   {% csrf_token %}
                   <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                   <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                  <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+                  <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
                 </form> 
                   {% else %}
                 <form action="enroll_fav_category" method="POST"> 
                   {% csrf_token %}
                 <input type="hidden" name="user_id" value="{{ request.user.user_id }}">
                 <input type="hidden" name="id_category" value="{{ category.id_category }}">
-                <button type="submit" class="btn btn-success">Add to Favorites</button>
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>
                 </form> 
                 {% endif %}
                   
