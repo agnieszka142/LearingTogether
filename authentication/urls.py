@@ -34,6 +34,10 @@ urlpatterns = [
     path('addmaterial', views.addmaterial, name='addmaterial'),
     path('textfile/<str:file_path>', views.view_text_file, name='textfile'),
     path('otherprofile', views.otherprofile, name='otherprofile'),
+<<<<<<< HEAD
     path('editcourse', views.editcourse, name='editcourse'),
     path('saveedited', views.saveedited, name='saveedited'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+=======
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 758cfb898d2dbc1f91de1a1b0fed01daa735b296

@@ -28,6 +28,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
 DEBUG = 'RENDER' not in os.environ
+print(os.environ)
+print("==========!!!!============")
+print('RENDER' in os.environ)
 
 ALLOWED_HOSTS = []
 
@@ -151,11 +154,11 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.User'
 APPEND_SLASH = False
-STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+STATIC_URL = '/static/'
 if not DEBUG:    
     # Tell Django to copy statics to the `staticfiles` directory
     # in your application directory on Render.
